@@ -4,111 +4,270 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AETHER — Witness My Sins</title>
-    <!-- Tailwind CSS Standard CDN Play CDN -->
-    <script src="https://tailwindcss.com"></script>
-    <!-- GSAP for Smooth Animations -->
+    
+    <!-- GSAP Animation Engine via CDN (Fallback safe) -->
     <script src="https://cloudflare.com"></script>
+
     <style>
+        /* Base Styling Reset */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
         html, body {
             background-color: #000000;
+            color: #ffffff;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             overflow-x: hidden;
-            scroll-behavior: smooth;
+            padding: 20px;
         }
         body::-webkit-scrollbar {
             display: none;
         }
-        /* Custom border accent color to mimic Aura template */
-        .zinc-border {
-            border-color: rgba(63, 63, 70, 0.4);
+
+        /* Ambient Glow Mesh */
+        #ambient-glow {
+            position: fixed;
+            bottom: -10%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80vw;
+            height: 40vh;
+            background: radial-gradient(circle, rgba(16, 185, 129, 0.15) 0%, rgba(0,0,0,0) 70%);
+            filter: blur(80px);
+            pointer-events: none;
+            z-index: 0;
+            transition: background 0.5s ease;
+        }
+
+        /* Main Container Card */
+        .main-card {
+            width: 100%;
+            max-width: 1100px;
+            background-color: rgba(9, 9, 11, 0.9);
+            border: 1px solid rgba(63, 63, 70, 0.3);
+            border-radius: 12px;
+            padding: 40px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            transform: scale(0.98);
+        }
+
+        /* Slash Accent Dividers */
+        .slashes {
+            color: #27272a;
+            font-family: monospace;
+            font-size: 13px;
+            letter-spacing: -2px;
+            white-space: nowrap;
+            overflow: hidden;
+            user-select: none;
+            opacity: 0.6;
+            margin: 20px 0;
+        }
+
+        /* Navigation Layout */
+        .nav-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: monospace;
+            font-size: 11px;
+            letter-spacing: 0.2em;
+            color: #71717a;
+            text-transform: uppercase;
+            margin-bottom: 50px;
+        }
+        .nav-logo {
+            color: #10b981;
+            font-weight: bold;
+            letter-spacing: normal;
+            font-size: 14px;
+        }
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+        .nav-links a, .nav-row right {
+            color: #71717a;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .nav-links a:hover { color: #10b981; }
+        .nav-links a.danger:hover { color: #f43f5e; }
+
+        /* The 3-Column Core Grid */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(3, 11fr);
+            gap: 1px;
+            background-color: rgba(63, 63, 70, 0.2);
+            border-top: 1px solid rgba(63, 63, 70, 0.3);
+            border-bottom: 1px solid rgba(63, 63, 70, 0.3);
+            position: relative;
+            z-index: 10;
+        }
+        @media (max-width: 768px) {
+            .grid-container { grid-template-columns: 1fr; }
+            .nav-links { display: none; }
+        }
+
+        /* Individual Card Columns */
+        .column-card {
+            background-color: #09090b;
+            padding: 30px 24px;
+            display: flex;
+            flex-col: column;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 400px;
+            transition: background-color 0.3s ease;
+            cursor: crosshair;
+        }
+        .column-card:hover {
+            background-color: rgba(24, 24, 27, 0.5);
+        }
+
+        /* Card Content Text Styling */
+        .card-id {
+            text-align: right;
+            font-family: monospace;
+            font-size: 12px;
+            color: #52525b;
+            transition: color 0.3s;
+        }
+        .column-card:hover .card-id { color: #10b981; }
+        
+        .card-tag {
+            font-family: monospace;
+            font-size: 11px;
+            color: #71717a;
+            letter-spacing: 0.1em;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+        .card-text {
+            color: #a1a1aa;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        .award-text {
+            color: #f43f5e;
+            font-family: monospace;
+            font-size: 10px;
+            font-weight: bold;
+            letter-spacing: 0.1em;
+            margin-bottom: 8px;
+        }
+        .card-title-bottom {
+            font-family: monospace;
+            font-size: 12px;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+        }
+
+        /* Massive Background Backdrop Text */
+        .backdrop-wrap {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            pointer-events: none;
+            z-index: -1;
+            user-select: none;
+        }
+        .backdrop-text {
+            font-size: 12vw;
+            font-weight: 900;
+            letter-spacing: -0.05em;
+            color: rgba(39, 39, 42, 0.15);
+            text-transform: uppercase;
         }
     </style>
 </head>
-<body class="bg-black text-white font-sans antialiased min-h-screen flex items-center justify-center p-4 md:p-8">
+<body>
 
-    <!-- Ambient Green Glow Behind Content -->
-    <div id="ambient-glow" class="fixed bottom-0 left-1/2 -translate-x-1/2 w-[80vw] h-[40vh] bg-emerald-950/20 blur-[120px] rounded-full pointer-events-none z-0 transition-all duration-700"></div>
+    <!-- Ambient Glow BG -->
+    <div id="ambient-glow"></div>
 
-    <!-- Main Container (Initially hidden for the intro animation) -->
-    <div id="main-card" class="w-full max-w-6xl bg-zinc-950/90 border zinc-border rounded-xl p-6 md:p-10 shadow-2xl relative overflow-hidden opacity-0 scale-[0.98]">
+    <!-- Main Container Card -->
+    <div id="main-card" class="main-card">
         
-        <!-- Header Slash Accents -->
-        <div class="text-zinc-800 tracking-tighter text-xs md:text-sm overflow-hidden whitespace-nowrap select-none mb-8 opacity-40 font-mono">
-            / AETHER ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        </div>
+        <div class="slashes">/ AETHER ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////</div>
 
-        <!-- Top Navigation -->
-        <div class="flex justify-between items-center mb-12 font-mono text-[10px] md:text-xs tracking-[0.2em] text-zinc-500 uppercase">
-            <div class="text-emerald-400 font-bold tracking-normal text-sm hover:line-through cursor-pointer">/SINS/</div>
-            <div class="hidden sm:flex gap-8">
-                <a href="#" class="hover:text-emerald-400 transition-colors">EXPLORE WORK</a>
-                <a href="#" class="hover:text-red-400 transition-colors">WITNESS MY SINS</a>
-                <a href="#" class="hover:text-white transition-colors">REGRETS</a>
+        <!-- Top Menu Navbar -->
+        <div class="nav-row">
+            <div class="nav-logo">/SINS/</div>
+            <div class="nav-links">
+                <a href="#">EXPLORE WORK</a>
+                <a class="danger" href="#">WITNESS MY SINS</a>
+                <a href="#">REGRETS</a>
             </div>
-            <a href="#" class="hover:text-white transition-colors">CONTACT ATTORNEY //</a>
+            <a href="#" style="text-align: right;">CONTACT ATTORNEY //</a>
         </div>
 
-        <!-- Three-Column Layout Hero Grid -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-px bg-zinc-800/40 border-t border-b zinc-border relative z-10">
+        <!-- Hero Content Grid -->
+        <div class="grid-container">
             
             <!-- Column 1 -->
-            <div class="grid-col-card bg-zinc-950 py-8 md:p-6 flex flex-col justify-between h-[340px] md:h-[420px] transition-all duration-300 hover:bg-zinc-900/40 group cursor-crosshair">
-                <div class="text-right text-xs font-mono text-zinc-600 group-hover:text-emerald-400 transition-colors">01-A.</div>
-                <div class="mt-auto">
-                    <p class="text-zinc-500 text-xs font-mono uppercase tracking-wider mb-2">EST. 2026 //</p>
-                    <p class="text-zinc-400 text-sm leading-relaxed max-w-[240px]">
-                        Crafting digital experiences that load slowly, leak memory, and frustrate project managers globally.
-                    </p>
+            <div class="column-card animated-col">
+                <div class="card-id">01-A.</div>
+                <div>
+                    <p class="card-tag">EST. 2026 //</p>
+                    <p class="card-text">Crafting digital experiences that load slowly, leak memories endlessly, and frustrate engineering managers globally.</p>
                 </div>
             </div>
 
-            <!-- Column 2 (Center Overlay Column) -->
-            <div class="grid-col-card bg-zinc-950 py-8 md:p-6 flex flex-col justify-between h-[340px] md:h-[420px] transition-all duration-300 hover:bg-zinc-900/40 group cursor-crosshair">
-                <div class="text-right text-xs font-mono text-zinc-600 group-hover:text-emerald-400 transition-colors">02-B.</div>
-                <div class="mt-auto">
-                    <p class="text-zinc-500 text-xs font-mono uppercase tracking-wider mb-2">THE STACK //</p>
-                    <p class="text-zinc-400 text-sm leading-relaxed max-w-[240px]">
-                        Bridging the wide gap between copy-pasting StackOverflow answers and praying to God it compiles on production.
-                    </p>
+            <!-- Column 2 -->
+            <div class="column-card animated-col">
+                <div class="card-id">02-B.</div>
+                <div>
+                    <p class="card-tag">THE STACK //</p>
+                    <p class="card-text">Bridging the wide, terrifying gap between copy-pasting code fragments off StackOverflow and praying it randomly builds in production.</p>
                 </div>
             </div>
 
             <!-- Column 3 -->
-            <div class="grid-col-card bg-zinc-950 py-8 md:p-6 flex flex-col justify-between h-[340px] md:h-[420px] transition-all duration-300 hover:bg-zinc-900/40 group cursor-crosshair">
-                <div class="text-right text-xs font-mono text-zinc-600 group-hover:text-emerald-400 transition-colors">03-C.</div>
-                <div class="mt-auto flex flex-col justify-between h-1/2">
+            <div class="column-card animated-col">
+                <div class="card-id">03-C.</div>
+                <div style="height: 50%; display: flex; flex-direction: column; justify-content: space-between;">
                     <div>
-                        <p class="text-zinc-500 text-xs font-mono uppercase tracking-wider">TM</p>
-                        <p class="text-zinc-600 text-[10px] font-mono tracking-widest">PIXEL IMPERFECT // 5K+ LINES</p>
+                        <p class="card-tag" style="color:#52525b;">TM</p>
+                        <p style="font-family: monospace; font-size: 10px; color:#52525b; letter-spacing: 0.1em;">PIXEL IMPERFECT // 5K+ LINES</p>
                     </div>
                     <div>
-                        <p class="text-red-500/70 text-[10px] font-mono tracking-widest mb-2 font-bold">// 0 AWARDS WON</p>
-                        <h4 class="text-white text-xs font-mono tracking-[0.3em] uppercase group-hover:text-emerald-400 transition-colors">TECH DEBT FRONTIER</h4>
+                        <p class="award-text">// 0 AWARDS WON</p>
+                        <h4 class="card-title-bottom">TECH DEBT FRONTIER</h4>
                     </div>
                 </div>
             </div>
 
-            <!-- Massive Backdrop Typography -->
-            <div class="absolute inset-0 flex items-center justify-center pointer-events-none z-[-1] overflow-hidden select-none">
-                <h1 id="hero-text" class="text-[15vw] md:text-[11rem] font-black tracking-tighter text-zinc-900/20 font-sans text-center leading-none uppercase">
-                    AETHER
-                </h1>
+            <!-- Giant Backdrop Background Typography Block -->
+            <div class="backdrop-wrap">
+                <h1 id="hero-text" class="backdrop-text">AETHER</h1>
             </div>
+
         </div>
 
-        <!-- Footer Slash Accents -->
-        <div class="text-zinc-800 tracking-tighter text-xs md:text-sm overflow-hidden whitespace-nowrap select-none mt-8 opacity-40 font-mono">
-            ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        </div>
+        <div class="slashes">////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////</div>
 
     </div>
 
-    <!-- JavaScript For Premium Cinematic Loading Animations -->
+    <!-- Cinematic Intro Code Trigger -->
     <script>
         document.addEventListener("DOMContentLoaded", () => {
-            // Create animation timeline
+            // Build out cinematic entry timeline
             const tl = gsap.timeline();
 
-            // 1. Fade and slide up the main wrapper card
+            // Slide container entry up cleanly
             tl.to("#main-card", {
                 opacity: 1,
                 scale: 1,
@@ -116,38 +275,28 @@
                 ease: "power4.out"
             });
 
-            // 2. Text elements inside cards stagger upwards smoothly
-            tl.from(".grid-col-card", {
-                y: 40,
+            // Smoothly stagger the columns vertical lift
+            tl.from(".animated-col", {
+                y: 35,
                 opacity: 0,
                 duration: 0.8,
-                stagger: 0.15,
+                stagger: 0.12,
                 ease: "power3.out"
             }, "-=0.8");
 
-            // 3. Bring up the massive backdrop text from the shadows
+            // Lift massive background lettering from shadow layer
             tl.from("#hero-text", {
-                y: 60,
+                y: 50,
                 opacity: 0,
-                duration: 1.5,
+                duration: 1.4,
                 ease: "expo.out"
-            }, "-=0.6");
+            }, "-=0.5");
 
-            // Interactive mouse effect: making the glow track your mouse moves
+            // Handle hover interaction properties for background aura glow tracking
             const glow = document.getElementById("ambient-glow");
             const card = document.getElementById("main-card");
 
-            card.addEventListener("mousemove", (e) => {
-                const rect = card.getBoundingClientRect();
-                const x = e.clientX - rect.left;
-                // Boost glow brightness slightly on hover
-                glow.style.backgroundColor = "rgba(16, 185, 129, 0.06)";
+            card.addEventListener("mousemove", () => {
+                glow.style.background = "radial-gradient(circle, rgba(16, 185, 129, 0.22) 0%, rgba(0,0,0,0) 70%)";
             });
-
             card.addEventListener("mouseleave", () => {
-                glow.style.backgroundColor = "rgba(6, 78, 59, 0.2)";
-            });
-        });
-    </script>
-</body>
-</html>
