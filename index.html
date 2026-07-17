@@ -1,121 +1,153 @@
 <!DOCTYPE html>
-<html lang="en" class="h-full bg-black select-none">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AETHER // High Performance Tech Debt</title>
-    <!-- Tailwind CSS v4 CDN -->
-    <script src="https://unpkg.com"></script>
-    <!-- GSAP for Butter-Smooth Interactive Animations -->
+    <title>AETHER — Witness My Sins</title>
+    <!-- Tailwind CSS Standard CDN Play CDN -->
+    <script src="https://tailwindcss.com"></script>
+    <!-- GSAP for Smooth Animations -->
     <script src="https://cloudflare.com"></script>
     <style>
-        @import url('https://googleapis.com');
-        
-        body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
+        html, body {
+            background-color: #000000;
             overflow-x: hidden;
+            scroll-behavior: smooth;
         }
-        .font-mono {
-            font-family: 'Space Mono', monospace;
-        }
-        /* Hide scrollbar completely while maintaining scrolling functionality */
-        ::-webkit-scrollbar {
+        body::-webkit-scrollbar {
             display: none;
         }
-        /* Custom brutalist utility clips */
-        .clip-brutalist {
-            clip-path: polygon(0 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%);
+        /* Custom border accent color to mimic Aura template */
+        .zinc-border {
+            border-color: rgba(63, 63, 70, 0.4);
         }
     </style>
 </head>
-<body class="h-full bg-[#000000] text-zinc-100 flex flex-col justify-between antialiased overflow-hidden relative">
+<body class="bg-black text-white font-sans antialiased min-h-screen flex items-center justify-center p-4 md:p-8">
 
-    <!-- Interactive Ambient Radial Glow Backdrop -->
-    <div id="ambient-glow" class="absolute pointer-events-none opacity-40 blur-[140px] w-[500px] h-[500px] rounded-full bg-gradient-to-r from-emerald-500/30 to-green-500/20 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-0 transition-transform duration-300 ease-out"></div>
+    <!-- Ambient Green Glow Behind Content -->
+    <div id="ambient-glow" class="fixed bottom-0 left-1/2 -translate-x-1/2 w-[80vw] h-[40vh] bg-emerald-950/20 blur-[120px] rounded-full pointer-events-none z-0 transition-all duration-700"></div>
 
-    <!-- Background Noise Overlay for Texture -->
-    <div class="absolute inset-0 opacity-[0.015] pointer-events-none z-50 bg-[url('data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http%3A%2F%2Fw3.org%2F2000%2Fsvg%22%3E%3Cfilter id=%22noise%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.85%22 numOctaves=%223%22 stitchTiles=%22stitch%22%2F%3E%3C%2Ffilter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noise)%22%2F%3E%3C%2Fsvg%3E')]"></div>
-
-    <!-- TOP BORDER SYSTEM -->
-    <header class="w-full z-40 relative select-none">
-        <div class="w-full overflow-hidden text-emerald-500/30 font-mono text-[10px] tracking-tightest whitespace-nowrap py-1 border-b border-zinc-900 bg-black/50 backdrop-blur-md">
-            ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        </div>
-        <nav class="max-w-7xl mx-auto px-6 py-6 flex items-center justify-between opacity-0" id="nav-header">
-            <div class="flex items-center space-x-3 group cursor-crosshair">
-                <div class="w-3 h-3 bg-emerald-500 rounded-none animate-pulse"></div>
-                <span class="font-mono text-xs font-bold tracking-widest text-zinc-400 group-hover:text-emerald-400 transition-colors">AETHER.ERR //</span>
-            </div>
-            <div class="flex items-center space-x-8 font-mono text-xs tracking-tight text-zinc-500">
-                <a href="#explore" class="hover:text-zinc-100 transition-colors relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-[1px] after:bg-emerald-500 hover:after:w-full after:transition-all">EXPLORE WORK</a>
-                <a href="#sins" class="hover:text-zinc-100 transition-colors relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-[1px] after:bg-emerald-500 hover:after:w-full after:transition-all">WITNESS MY SINS</a>
-                <a href="#regrets" class="hover:text-zinc-100 transition-colors relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-[1px] after:bg-emerald-500 hover:after:w-full after:transition-all">REGRETS</a>
-                <a href="#lawyer" class="hover:text-emerald-400 transition-colors border border-zinc-800 px-3 py-1.5 bg-zinc-950/50 hover:border-emerald-500/50 clip-brutalist">CONTACT ATTORNEY</a>
-            </div>
-        </nav>
-    </header>
-
-    <!-- MAIN INTERACTIVE HERO CONTAINER -->
-    <main class="relative w-full max-w-7xl mx-auto px-6 flex-grow flex flex-col justify-center z-10 my-auto py-12">
+    <!-- Main Container (Initially hidden for the intro animation) -->
+    <div id="main-card" class="w-full max-w-6xl bg-zinc-950/90 border zinc-border rounded-xl p-6 md:p-10 shadow-2xl relative overflow-hidden opacity-0 scale-[0.98]">
         
-        <!-- MASSIVE BACKDROP TEXT LEVEL -->
-        <div class="absolute inset-0 flex items-center justify-center pointer-events-none select-none z-0">
-            <h1 id="massive-backdrop" class="text-[15vw] font-extrabold tracking-tighter text-zinc-950 leading-none text-center select-none font-sans opacity-0 scale-90">
-                AETHER
-            </h1>
+        <!-- Header Slash Accents -->
+        <div class="text-zinc-800 tracking-tighter text-xs md:text-sm overflow-hidden whitespace-nowrap select-none mb-8 opacity-40 font-mono">
+            / AETHER ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         </div>
 
-        <!-- CONTENT GRID SYSTEM (3 Columns) -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 w-full relative z-10 items-stretch mt-12">
+        <!-- Top Navigation -->
+        <div class="flex justify-between items-center mb-12 font-mono text-[10px] md:text-xs tracking-[0.2em] text-zinc-500 uppercase">
+            <div class="text-emerald-400 font-bold tracking-normal text-sm hover:line-through cursor-pointer">/SINS/</div>
+            <div class="hidden sm:flex gap-8">
+                <a href="#" class="hover:text-emerald-400 transition-colors">EXPLORE WORK</a>
+                <a href="#" class="hover:text-red-400 transition-colors">WITNESS MY SINS</a>
+                <a href="#" class="hover:text-white transition-colors">REGRETS</a>
+            </div>
+            <a href="#" class="hover:text-white transition-colors">CONTACT ATTORNEY //</a>
+        </div>
+
+        <!-- Three-Column Layout Hero Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-px bg-zinc-800/40 border-t border-b zinc-border relative z-10">
             
-            <!-- COLUMN 1 -->
-            <div class="grid-card opacity-0 translate-y-12 bg-zinc-950/40 border border-zinc-900 p-8 flex flex-col justify-between relative group overflow-hidden clip-brutalist backdrop-blur-sm cursor-pointer min-h-[380px]">
-                <!-- Hidden dynamic glow background inside card -->
-                <div class="absolute inset-0 bg-gradient-to-br from-emerald-950/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
-                <div class="absolute bottom-0 right-0 w-32 h-32 bg-emerald-500/5 rounded-full blur-2xl pointer-events-none transform translate-x-12 translate-y-12 scale-50 group-hover:scale-150 transition-transform duration-700 ease-out"></div>
-                
-                <div>
-                    <div class="flex justify-between items-start mb-12">
-                        <span class="font-mono text-xs tracking-widest text-emerald-500 font-bold bg-emerald-950/30 px-2 py-0.5 border border-emerald-900/50">01-A</span>
-                        <span class="font-mono text-[10px] text-zinc-600 group-hover:text-emerald-500 transition-colors">// HEAVY_LOAD</span>
-                    </div>
-                    <h3 class="text-2xl font-bold tracking-tight text-zinc-100 group-hover:text-white mb-4 transition-colors">
-                        EST. 2026 //
-                    </h3>
-                    <p class="text-sm tracking-wide leading-relaxed text-zinc-400 group-hover:text-zinc-300 transition-colors font-sans">
-                        Crafting digital experiences that load slowly, leak memory, and frustrate project managers universally.
+            <!-- Column 1 -->
+            <div class="grid-col-card bg-zinc-950 py-8 md:p-6 flex flex-col justify-between h-[340px] md:h-[420px] transition-all duration-300 hover:bg-zinc-900/40 group cursor-crosshair">
+                <div class="text-right text-xs font-mono text-zinc-600 group-hover:text-emerald-400 transition-colors">01-A.</div>
+                <div class="mt-auto">
+                    <p class="text-zinc-500 text-xs font-mono uppercase tracking-wider mb-2">EST. 2026 //</p>
+                    <p class="text-zinc-400 text-sm leading-relaxed max-w-[240px]">
+                        Crafting digital experiences that load slowly, leak memory, and frustrate project managers globally.
                     </p>
-                </div>
-                
-                <div class="pt-8 border-t border-zinc-900/50 flex justify-between items-center group-hover:border-emerald-900/30 transition-colors">
-                    <span class="font-mono text-[11px] text-zinc-500 tracking-wider">STATUS: DEPLOYING REASONABLE ERRORS</span>
-                    <svg class="w-4 h-4 text-zinc-600 group-hover:text-emerald-400 transform group-hover:translate-x-1 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
                 </div>
             </div>
 
-            <!-- COLUMN 2 -->
-            <div class="grid-card opacity-0 translate-y-12 bg-zinc-950/40 border border-zinc-900 p-8 flex flex-col justify-between relative group overflow-hidden clip-brutalist backdrop-blur-sm cursor-pointer min-h-[380px]">
-                <div class="absolute inset-0 bg-gradient-to-br from-emerald-950/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
-                <div class="absolute bottom-0 right-0 w-32 h-32 bg-emerald-500/5 rounded-full blur-2xl pointer-events-none transform translate-x-12 translate-y-12 scale-50 group-hover:scale-150 transition-transform duration-700 ease-out"></div>
-
-                <div>
-                    <div class="flex justify-between items-start mb-12">
-                        <span class="font-mono text-xs tracking-widest text-emerald-500 font-bold bg-emerald-950/30 px-2 py-0.5 border border-emerald-900/50">02-B</span>
-                        <span class="font-mono text-[10px] text-zinc-600 group-hover:text-emerald-500 transition-colors">// CTRL_C_V</span>
-                    </div>
-                    <h3 class="text-2xl font-bold tracking-tight text-zinc-100 group-hover:text-white mb-4 transition-colors">
-                        THE STACK //
-                    </h3>
-                    <p class="text-sm tracking-wide leading-relaxed text-zinc-400 group-hover:text-zinc-300 transition-colors font-sans">
-                        Bridging the gap between copy-pasting StackOverflow answers and praying to God it compiles on production.
+            <!-- Column 2 (Center Overlay Column) -->
+            <div class="grid-col-card bg-zinc-950 py-8 md:p-6 flex flex-col justify-between h-[340px] md:h-[420px] transition-all duration-300 hover:bg-zinc-900/40 group cursor-crosshair">
+                <div class="text-right text-xs font-mono text-zinc-600 group-hover:text-emerald-400 transition-colors">02-B.</div>
+                <div class="mt-auto">
+                    <p class="text-zinc-500 text-xs font-mono uppercase tracking-wider mb-2">THE STACK //</p>
+                    <p class="text-zinc-400 text-sm leading-relaxed max-w-[240px]">
+                        Bridging the wide gap between copy-pasting StackOverflow answers and praying to God it compiles on production.
                     </p>
-                </div>
-
-                <div class="pt-8 border-t border-zinc-900/50 flex justify-between items-center group-hover:border-emerald-900/30 transition-colors">
-                    <span class="font-mono text-[11px] text-zinc-500 tracking-wider">ENVIRONMENT: COMPILED WITH HOPE</span>
-                    <svg class="w-4 h-4 text-zinc-600 group-hover:text-emerald-400 transform group-hover:translate-x-1 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
                 </div>
             </div>
 
-            <!-- COLUMN 3 -->
-            <div class="grid-card opacity-0 translate-y-12 bg-zinc-950/40 border border-zinc-900 p-8 flex flex-col justify-between relative group overflow-hidden clip-brutalist backdrop-blur-sm cursor-pointer min-h-[380px]">
+            <!-- Column 3 -->
+            <div class="grid-col-card bg-zinc-950 py-8 md:p-6 flex flex-col justify-between h-[340px] md:h-[420px] transition-all duration-300 hover:bg-zinc-900/40 group cursor-crosshair">
+                <div class="text-right text-xs font-mono text-zinc-600 group-hover:text-emerald-400 transition-colors">03-C.</div>
+                <div class="mt-auto flex flex-col justify-between h-1/2">
+                    <div>
+                        <p class="text-zinc-500 text-xs font-mono uppercase tracking-wider">TM</p>
+                        <p class="text-zinc-600 text-[10px] font-mono tracking-widest">PIXEL IMPERFECT // 5K+ LINES</p>
+                    </div>
+                    <div>
+                        <p class="text-red-500/70 text-[10px] font-mono tracking-widest mb-2 font-bold">// 0 AWARDS WON</p>
+                        <h4 class="text-white text-xs font-mono tracking-[0.3em] uppercase group-hover:text-emerald-400 transition-colors">TECH DEBT FRONTIER</h4>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Massive Backdrop Typography -->
+            <div class="absolute inset-0 flex items-center justify-center pointer-events-none z-[-1] overflow-hidden select-none">
+                <h1 id="hero-text" class="text-[15vw] md:text-[11rem] font-black tracking-tighter text-zinc-900/20 font-sans text-center leading-none uppercase">
+                    AETHER
+                </h1>
+            </div>
+        </div>
+
+        <!-- Footer Slash Accents -->
+        <div class="text-zinc-800 tracking-tighter text-xs md:text-sm overflow-hidden whitespace-nowrap select-none mt-8 opacity-40 font-mono">
+            ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        </div>
+
+    </div>
+
+    <!-- JavaScript For Premium Cinematic Loading Animations -->
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            // Create animation timeline
+            const tl = gsap.timeline();
+
+            // 1. Fade and slide up the main wrapper card
+            tl.to("#main-card", {
+                opacity: 1,
+                scale: 1,
+                duration: 1.2,
+                ease: "power4.out"
+            });
+
+            // 2. Text elements inside cards stagger upwards smoothly
+            tl.from(".grid-col-card", {
+                y: 40,
+                opacity: 0,
+                duration: 0.8,
+                stagger: 0.15,
+                ease: "power3.out"
+            }, "-=0.8");
+
+            // 3. Bring up the massive backdrop text from the shadows
+            tl.from("#hero-text", {
+                y: 60,
+                opacity: 0,
+                duration: 1.5,
+                ease: "expo.out"
+            }, "-=0.6");
+
+            // Interactive mouse effect: making the glow track your mouse moves
+            const glow = document.getElementById("ambient-glow");
+            const card = document.getElementById("main-card");
+
+            card.addEventListener("mousemove", (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                // Boost glow brightness slightly on hover
+                glow.style.backgroundColor = "rgba(16, 185, 129, 0.06)";
+            });
+
+            card.addEventListener("mouseleave", () => {
+                glow.style.backgroundColor = "rgba(6, 78, 59, 0.2)";
+            });
+        });
+    </script>
+</body>
+</html>
