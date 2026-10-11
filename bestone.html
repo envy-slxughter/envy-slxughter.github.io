@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="en" data-accent="violet">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>my doom cave</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800;900&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+        :root {
+            /* Android 17 / Material Expressive 3 Expressive Spring Easing */
+            --ease-m3-expressive: cubic-bezier(0.34, 1.56, 0.64, 1);
+            --ease-m3-smooth: cubic-bezier(0.2, 0, 0, 1);
+            
+            /* Accent Palettes */
+            --accent-violet: #d0bcff;
+            --accent-violet-container: #4f378b;
+            --accent-violet-glow: rgba(208, 188, 255, 0.35);
+
+            --accent-mint: #a6f4c5;
+            --accent-mint-container: #005232;
+            --accent-mint-glow: rgba(166, 244, 197, 0.35);
+
+            --accent-coral: #ffb4a9;
+            --accent-coral-container: #8c1d18;
+            --accent-coral-glow: rgba(255, 180, 169, 0.35);
+        }
+
+        [data-accent="violet"] {
+            --accent-primary: var(--accent-violet);
+            --accent-container: var(--accent-violet-container);
+            --accent-glow: var(--accent-violet-glow);
+        }
+
+        [data-accent="mint"] {
+            --accent-primary: var(--accent-mint);
+            --accent-container: var(--accent-mint-container);
+            --accent-glow: var(--accent-mint-glow);
+        }
+
+        [data-accent="coral"] {
+            --accent-primary: var(--accent-coral);
+            --accent-container: var(--accent-coral-container);
+            --accent-glow: var(--accent-coral-glow);
+        }
+
+        body {
+            background-color: #0f1115;
+            color: #e6e1e5;
+            overflow-x: hidden;
+            transition: background-color 0.4s var(--ease-m3-smooth);
+        }
+
+        .m3-surface {
+            background-color: #1a1c22;
+            border: 2px solid rgba(255, 255, 255, 0.08);
+            border-radius: 36px;
+            transition: all 0.4s var(--ease-m3-expressive);
+        }
+
+        .m3-surface-tonal {
+            background-color: #252830;
+            border: 2px solid transparent;
+            border-radius: 28px;
+            transition: all 0.4s var(--ease-m3-expressive);
+        }
+
+        .m3-pill {
+            border-radius: 9999px;
+            transition: all 0.35s var(--ease-m3-expressive);
+        }
+
+        @keyframes float-blob-1 {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(60px, -80px) scale(1.15); }
+            66% { transform: translate(-40px, 50px) scale(0.9); }
+        }
+
+        @keyframes float-blob-2 {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(-70px, 60px) scale(0.85); }
+            66% { transform: translate(50px, -60px) scale(1.2); }
+        }
+
+        .blob-1 {
+            animation: float-blob-1 18s ease-in-out infinite;
+            background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+        }
+
+        .blob-2 {
+            animation: float-blob-2 22s ease-in-out infinite;
+            background: radial-gradient(circle, rgba(168, 85, 247, 0.25) 0%, transparent 70%);
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 20px -5px var(--accent-glow); }
+            50% { box-shadow: 0 0 45px 10px var(--accent-glow); }
+        }
+
+        .pulse-badge {
+            animation: pulse-glow 3s infinite ease-in-out;
+        }
+
+        .spring-hover:hover {
+            transform: translateY(-8px) scale(1.03);
+            border-color: var(--accent-primary);
+            box-shadow: 0 20px 40px -15px var(--accent-glow);
+        }
+
+        .spring-hover:active {
+            transform: translateY(-2px) scale(0.98);
+        }
+
+        @keyframes cursor-blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        .terminal-cursor {
+            animation: cursor-blink 0.8s infinite;
+        }
+
+        /* 3D Doom Shooter Game Overlay */
+        #game-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 9998;
+            background: black;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease-in-out;
+        }
+        #game-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        #crosshair {
+            position: absolute;
+            top: 50%; left: 50%;
+            width: 24px; height: 24px;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            display: none;
+            z-index: 9999;
+        }
+        #crosshair::before, #crosshair::after {
+            content: '';
+            position: absolute;
+            background: var(--accent-primary);
+        }
+        #crosshair::before { top: 10px; left: 0; width: 24px; height: 4px; }
+        #crosshair::after { top: 0; left: 10px; width: 4px; height: 24px; }
+
+        #game-hud {
+            position: absolute;
+            top: 20px; left: 20px;
+            color: white;
+            font-family: monospace;
+            font-size: 18px;
+            display: none;
+            z-index: 9999;
+            background: rgba(0,0,0,0.7);
+            padding: 12px 24px;
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.2);
+            backdrop-filter: blur(10px);
+        }
+    </style>
+</head>
+<body class="font-sans min-h-screen relative selection:bg-[var(--accent-primary)] selection:text-black">
+
+    <!-- 3D Doom Shooter Game Overlay -->
+    <div id="game-overlay"></div>
+    <div id="crosshair"></div>
+    <div id="game-hud">Level <span id="hud-level">1</span>/3 | Kills: <span id="hud-score">0</span>/<span id="hud-target">5</span></div>
+
+    <!-- Floating Ambient Background Blobs -->
+    <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+        <div class="blob-1 absolute -top-20 -left-20 w-[500px] h-[500px] rounded-full filter blur-3xl opacity-70"></div>
+        <div class="blob-2 absolute -bottom-30 -right-20 w-[600px] h-[600px] rounded-full filter blur-3xl opacity-60"></div>
+    </div>
+
+    <!-- Sticky Expressive Navigation Header -->
+    <header class="sticky top-6 z-50 max-w-4xl mx-auto px-4">
+        <nav class="m3-surface px-6 py-4 flex items-center justify-between shadow-2xl">
+            <div class="flex items-center gap-3">
+                <span class="w-4 h-4 rounded-full bg-[var(--accent-primary)] pulse-badge"></span>
+                <span class="font-extrabold tracking-tight text-lg">my doom cave</span>
+            </div>
+
+            <!-- Material 3 Accent Palette Selector -->
+            <div class="flex items-center gap-2 bg-[#121418] p-1.5 rounded-full border border-white/10">
+                <button onclick="setAccent('violet')" class="w-7 h-7 rounded-full bg-[#d0bcff] hover:scale-125 transition-transform cursor-pointer" title="Electric Violet"></button>
+                <button onclick="setAccent('mint')" class="w-7 h-7 rounded-full bg-[#a6f4c5] hover:scale-125 transition-transform cursor-pointer" title="Neon Mint"></button>
+                <button onclick="setAccent('coral')" class="w-7 h-7 rounded-full bg-[#ffb4a9] hover:scale-125 transition-transform cursor-pointer" title="Cyber Coral"></button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Container -->
+    <main class="max-w-4xl mx-auto px-4 pt-12 pb-24 relative z-10 space-y-12">
+
+        <!-- Hero Section -->
+        <section class="m3-surface p-8 md:p-12 spring-hover relative overflow-hidden">
+            <div class="inline-flex items-center gap-2 px-5 py-2 m3-pill bg-[var(--accent-container)] text-[var(--accent-primary)] font-bold text-xs uppercase tracking-widest mb-6">
+                ✨ pro keyboard smasher
+            </div>
+            
+            <h1 class="text-4xl md:text-6xl font-black tracking-tight leading-none mb-6">
+                yo i build cool <span class="text-[var(--accent-primary)] underline decoration-wavy decoration-2">internet stuff.</span>
+            </h1>
+            
+            <p class="text-lg md:text-xl text-gray-300 max-w-2xl font-semibold leading-relaxed mb-8">
+                Professional keyboard smasher. writing code that somehow works and hoping nobody looks under the hood.
+            </p>
+
+            <!-- Socials Hub -->
+            <div class="flex flex-wrap items-center gap-4">
+                <a href="#projects" class="m3-pill px-6 py-4 bg-[var(--accent-primary)] text-black font-extrabold hover:scale-105 active:scale-95 transition-all shadow-lg shadow-[var(--accent-glow)]">
+                    Check out the builds ↓
+                </a>
+                <a href="https://github.com" target="_blank" class="m3-pill px-6 py-4 m3-surface-tonal text-white font-bold hover:bg-white/10 hover:scale-105 active:scale-95 transition-all">
+                    🐙 GitHub
+                </a>
+                <a href="https://discord.com" target="_blank" class="m3-pill px-6 py-4 m3-surface-tonal text-white font-bold hover:bg-white/10 hover:scale-105 active:scale-95 transition-all">
+                    💬 Discord
+                </a>
+                <a href="https://linkedin.com" target="_blank" class="m3-pill px-6 py-4 m3-surface-tonal text-white font-bold hover:bg-white/10 hover:scale-105 active:scale-95 transition-all">
+                    💼 LinkedIn
+                </a>
+            </div>
+        </section>
+
+        <!-- Interactive Terminal -->
+        <section class="m3-surface p-6 font-mono text-sm bg-[#0a0b0e] border-[var(--accent-primary)]/30 shadow-2xl">
+            <div class="flex items-center justify-between pb-4 border-b border-white/10 mb-4">
+                <div class="flex items-center gap-2">
+                    <span class="w-3 h-3 rounded-full bg-red-500/80"></span>
+                    <span class="w-3 h-3 rounded-full bg-yellow-500/80"></span>
+                    <span class="w-3 h-3 rounded-full bg-green-500/80"></span>
+                </div>
+                <span class="text-xs text-gray-500 font-sans">terminal.sh — bash (try: help, fetch, doom)</span>
+            </div>
+
+            <div id="terminal-output" class="space-y-2 mb-4 max-h-48 overflow-y-auto text-gray-300">
+                <p>&gt; <span class="text-[var(--accent-primary)]">System ready.</span> Type <span class="text-amber-300">help</span> for commands[cite: 3] or <span class="text-red-400">doom</span> to launch the 3-level 3D shooter!</p>
+            </div>
+
+            <div class="flex items-center gap-2 border-t border-white/10 pt-3">
+                <span class="text-[var(--accent-primary)] font-bold">[user@gng ~]$</span>
+                <input type="text" id="terminal-input" autofocus autocomplete="off" class="bg-transparent text-white focus:outline-none w-full font-mono">
+            </div>
+        </section>
+
+        <!-- Projects Grid Section (4 Projects) -->
+        <section id="projects" class="space-y-6">
+            <div class="flex items-center justify-between">
+                <h2 class="text-2xl font-black tracking-tight flex items-center gap-3">
+                    <span class="w-8 h-8 rounded-2xl bg-[var(--accent-container)] text-[var(--accent-primary)] flex items-center justify-center text-sm font-bold">01</span>
+                    Stuff I Built
+                </h2>
+                <span class="text-xs text-gray-400 font-semibold uppercase tracking-wider">Click cards for breakdown</span>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Project 1 -->
+                <div onclick="openModal('Project Zero', 'A high-velocity web utility that turns annoying workflows into a 1-click smooth ride. Built with fluid transitions and zero-bloat state management.', ['React', 'Tailwind', '⚡', '2026'])" 
+                     class="project-card m3-surface p-6 spring-hover cursor-pointer group">
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="text-3xl">🚀</span>
+                        <span class="text-xs font-mono px-3 py-1 m3-pill bg-white/5 group-hover:bg-[var(--accent-primary)] group-hover:text-black transition-colors">2026</span>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2 group-hover:text-[var(--accent-primary)] transition-colors">Project Zero</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed mb-4">A high-velocity web utility that turns annoying workflows into a 1-click smooth ride.</p>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="text-xs font-semibold px-3 py-1 rounded-full bg-white/5 text-gray-300">React</span>
+                        <span class="text-xs font-semibold px-3 py-1 rounded-full bg-white/5 text-gray-300">Tailwind</span>
+                    </div>
+                </div>
+
+                <!-- Project 2 -->
+                <div onclick="openModal('Sauce Engine', 'Custom visual engine created to render expressive physics-based animations in the browser without dropping frames.', ['TypeScript', 'Three.js'])" 
+                     class="project-card m3-surface p-6 spring-hover cursor-pointer group">
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="text-3xl">⚡</span>
+                        <span class="text-xs font-mono px-3 py-1 m3-pill bg-white/5 group-hover:bg-[var(--accent-primary)] group-hover:text-black transition-colors">2026</span>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2 group-hover:text-[var(--accent-primary)] transition-colors">Sauce Engine</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed mb-4">Physics-driven micro-interaction framework for modern web apps with zero drag.</p>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="text-xs font-semibold px-3 py-1 rounded-full bg-white/5 text-gray-300">TypeScript</span>
+                        <span class="text-xs font-semibold px-3 py-1 rounded-full bg-white/5 text-gray-300">Three.js</span>
+                    </div>
+                </div>
+
+                <!-- Project 3 -->
+                <div onclick="openModal('DoomScroll Killer', 'A browser extension that locks you out of short-form feeds when your daily commit streak looks sad.', ['Extension', 'JavaScript'])" 
+                     class="project-card m3-surface p-6 spring-hover cursor-pointer group">
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="text-3xl">🛡️</span>
+                        <span class="text-xs font-mono px-3 py-1 m3-pill bg-white/5 group-hover:bg-[var(--accent-primary)] group-hover:text-black transition-colors">2026</span>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2 group-hover:text-[var(--accent-primary)] transition-colors">DoomScroll Killer</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed mb-4">Blocks addictive feeds until code actually gets pushed to GitHub.</p>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="text-xs font-semibold px-3 py-1 rounded-full bg-white/5 text-gray-300">Extension</span>
+                        <span class="text-xs font-semibold px-3 py-1 rounded-full bg-white/5 text-gray-300">JavaScript</span>
+                    </div>
+                </div>
+
+                <!-- Project 4 -->
+                <div onclick="openModal('Git Blame Visualizer', 'Interactive heatmap exposing exactly who broke production at 4 AM on a Sunday.', ['Node.js', 'Analytics'])" 
+                     class="project-card m3-surface p-6 spring-hover cursor-pointer group">
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="text-3xl">📊</span>
+                        <span class="text-xs font-mono px-3 py-1 m3-pill bg-white/5 group-hover:bg-[var(--accent-primary)] group-hover:text-black transition-colors">2026</span>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2 group-hover:text-[var(--accent-primary)] transition-colors">Git Blame Visualizer</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed mb-4">Pinpoint repository chaos with style and color-coded accountability.</p>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="text-xs font-semibold px-3 py-1 rounded-full bg-white/5 text-gray-300">Node.js</span>
+                        <span class="text-xs font-semibold px-3 py-1 rounded-full bg-white/5 text-gray-300">Analytics</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Skills Section -->
+        <section class="m3-surface p-8 space-y-6">
+            <h2 class="text-2xl font-black tracking-tight flex items-center gap-3">
+                <span class="w-8 h-8 rounded-2xl bg-[var(--accent-container)] text-[var(--accent-primary)] flex items-center justify-center text-sm font-bold">02</span>
+                Weapons of Choice
+            </h2>
+
+            <div class="flex flex-wrap gap-3">
+                <div class="m3-pill px-6 py-3 bg-[#22252e] hover:bg-[var(--accent-primary)] hover:text-black font-extrabold text-sm border border-white/5 cursor-default transition-all transform hover:scale-110 hover:-rotate-2">
+                    ⚡ JavaScript (ES6+)
+                </div>
+                <div class="m3-pill px-6 py-3 bg-[#22252e] hover:bg-[var(--accent-primary)] hover:text-black font-extrabold text-sm border border-white/5 cursor-default transition-all transform hover:scale-110 hover:rotate-2">
+                    🔷 TypeScript
+                </div>
+                <div class="m3-pill px-6 py-3 bg-[#22252e] hover:bg-[var(--accent-primary)] hover:text-black font-extrabold text-sm border border-white/5 cursor-default transition-all transform hover:scale-110 hover:-rotate-2">
+                    ⚛️ React / Next.js
+                </div>
+                <div class="m3-pill px-6 py-3 bg-[#22252e] hover:bg-[var(--accent-primary)] hover:text-black font-extrabold text-sm border border-white/5 cursor-default transition-all transform hover:scale-110 hover:rotate-2">
+                    🎨 Tailwind CSS
+                </div>
+                <div class="m3-pill px-6 py-3 bg-[#22252e] hover:bg-[var(--accent-primary)] hover:text-black font-extrabold text-sm border border-white/5 cursor-default transition-all transform hover:scale-110 hover:-rotate-2">
+                    🟢 Node.js / Express
+                </div>
+                <div class="m3-pill px-6 py-3 bg-[#22252e] hover:bg-[var(--accent-primary)] hover:text-black font-extrabold text-sm border border-white/5 cursor-default transition-all transform hover:scale-110 hover:rotate-2">
+                    🐙 Git & GitHub
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Project Modal Popup -->
+    <div id="projectModal" class="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300">
+        <div class="m3-surface bg-[#1e2028] p-8 max-w-lg w-full transform scale-90 transition-transform duration-300 space-y-6 border-[var(--accent-primary)]/40 shadow-2xl" id="modalContainer">
+            <div class="flex justify-between items-center">
+                <h3 id="modalTitle" class="text-2xl font-black text-[var(--accent-primary)]">Project Title</h3>
+                <button onclick="closeModal()" class="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center font-bold cursor-pointer">✕</button>
+            </div>
+            <p id="modalDescription" class="text-gray-300 leading-relaxed font-semibold">Project description goes here.</p>
+            <div id="modalTags" class="flex flex-wrap gap-2"></div>
+            <div class="pt-4 flex justify-end">
+                <button onclick="closeModal()" class="m3-pill px-6 py-3 bg-[var(--accent-primary)] text-black font-bold hover:scale-105 transition-transform cursor-pointer">
+                    Got it 🤝
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Three.js CDN for 3D DOOM Shooter -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        // Accent Switcher Logic
+        function setAccent(theme) {
+            document.documentElement.setAttribute('data-accent', theme);
+            localStorage.setItem('portfolio_accent', theme);
+        }
+
+        const savedAccent = localStorage.getItem('portfolio_accent');
+        if (savedAccent) {
+            setAccent(savedAccent);
+        }
+
+        // Terminal Command Logic
+        const terminalOutput = document.getElementById('terminal-output');
+        const terminalInput = document.getElementById('terminal-input');
+        const gameOverlay = document.getElementById('game-overlay');
+        const crosshair = document.getElementById('crosshair');
+        const gameHud = document.getElementById('game-hud');
+        const hudLevel = document.getElementById('hud-level');
+        const hudScore = document.getElementById('hud-score');
+        const hudTarget = document.getElementById('hud-target');
+
+        terminalInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                const cmd = terminalInput.value.trim().toLowerCase();
+                if (!cmd) return;
+
+                terminalOutput.innerHTML += `<p class="text-gray-400">&gt; [user@gng ~]$ ${cmd}</p>`;
+                terminalInput.value = '';
+
+                if (cmd === 'clear') {
+                    terminalOutput.innerHTML = `<p class="text-gray-400">&gt; Terminal cleared.</p>`;
+                } else if (cmd === 'help') {
+                    terminalOutput.innerHTML += `<p class="text-emerald-400">Valid commands: help, clear, fetch, doom</p>`;
+                } else if (cmd === 'fetch') {
+                    terminalOutput.innerHTML += `<p class="text-emerald-400">dev // status: chill | caffeine: max | bugs in production: 0 (allegedly)</p>`;
+                } else if (cmd === 'doom') {
+                    terminalOutput.innerHTML += `<p class="text-red-400">🔥 Initializing DOOM Protocol across 3 Levels... Get ready.</p>`;
+                    startDoomGame();
+                } else {
+                    terminalOutput.innerHTML += `<p class="text-red-400">zsh: command not found: ${cmd}. Type 'help' or 'doom'.</p>`;
+                }
+                terminalOutput.scrollTop = terminalOutput.scrollHeight;
+            }
+        });
+
+        // 3D 3-Level DOOM Shooter Game
+        function startDoomGame() {
+            gameOverlay.classList.add('active');
+            crosshair.style.display = 'block';
+            gameHud.style.display = 'block';
+            gameOverlay.innerHTML = '';
+
+            let currentLevel = 1;
+            let score = 0;
+            let targetKills = 5;
+
+            hudLevel.textContent = currentLevel;
+            hudScore.textContent = score;
+            hudTarget.textContent = targetKills;
+
+            const scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x050508);
+            scene.fog = new THREE.FogExp2(0x050508, 0.05);
+
+            const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            const renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            gameOverlay.appendChild(renderer.domElement);
+
+            // Lighting
+            scene.add(new THREE.AmbientLight(0xffffff, 0.8));
+            const pointLight = new THREE.PointLight(0xd0bcff, 3, 50);
+            pointLight.position.set(0, 8, 0);
+            scene.add(pointLight);
+
+            // Grid Arena Floor
+            const gridHelper = new THREE.GridHelper(100, 50, 0xd0bcff, 0x1a1c22);
+            gridHelper.position.y = -3;
+            scene.add(gridHelper);
+
+            // Attach 3D Retro Gun Model
+            const gunGroup = new THREE.Group();
+            const gunGeo = new THREE.BoxGeometry(0.4, 0.3, 1.5);
+            const gunMat = new THREE.MeshStandardMaterial({ color: 0x333740, roughness: 0.2 });
+            const gunMesh = new THREE.Mesh(gunGeo, gunMat);
+            gunMesh.position.set(0.5, -0.5, -1.0);
+            gunGroup.add(gunMesh);
+            camera.add(gunGroup);
+            scene.add(camera);
+
+            // Spawn Enemies
+            let enemies = [];
+            function spawnEnemiesForLevel() {
+                enemies.forEach(e => scene.remove(e.mesh));
+                enemies = [];
+
+                for (let i = 0; i < targetKills + (currentLevel * 2); i++) {
+                    const enemyGroup = new THREE.Group();
+                    
+                    // Enemy Body (Doom-style demons/sprites)
+                    const bodyGeo = new THREE.BoxGeometry(1.2, 1.8, 1.2);
+                    const bodyMat = new THREE.MeshStandardMaterial({ 
+                        color: currentLevel === 1 ? 0xff5577 : currentLevel === 2 ? 0xffaa33 : 0xff2222,
+                        roughness: 0.3,
+                        emissive: 0x220000
+                    });
+                    const body = new THREE.Mesh(bodyGeo, bodyMat);
+                    enemyGroup.add(body);
+
+                    enemyGroup.position.x = (Math.random() - 0.5) * 30;
+                    enemyGroup.position.y = 0;
+                    enemyGroup.position.z = -20 - Math.random() * 35;
+
+                    scene.add(enemyGroup);
+                    enemies.push({
+                        mesh: enemyGroup,
+                        speed: 0.04 + (currentLevel * 0.03) + Math.random() * 0.04,
+                        dir: Math.random() > 0.5 ? 1 : -1
+                    });
+                }
+            }
+            spawnEnemiesForLevel();
+
+            // Mouse Look
+            let mouseX = 0, mouseY = 0;
+            function onMouseMove(e) {
+                mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
+                mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
+                camera.rotation.y = -mouseX * 1.2;
+                camera.rotation.x = -mouseY * 0.8;
+            }
+            window.addEventListener('mousemove', onMouseMove);
+
+            // Shooting
+            const raycaster = new THREE.Raycaster();
+            const mouse = new THREE.Vector2(0, 0);
+
+            function onShoot() {
+                // Recoil kick
+                gunGroup.position.z += 0.2;
+                setTimeout(() => { gunGroup.position.z -= 0.2; }, 60);
+
+                raycaster.setFromCamera(mouse, camera);
+                const targets = enemies.map(e => e.mesh);
+                const intersects = raycaster.intersectObjects(targets, true);
+
+                if (intersects.length > 0) {
+                    let hitRoot = intersects[0].object;
+                    while (hitRoot.parent && hitRoot.parent !== scene) {
+                        hitRoot = hitRoot.parent;
+                    }
+
+                    scene.remove(hitRoot);
+                    enemies = enemies.filter(e => e.mesh !== hitRoot);
+                    score++;
+                    hudScore.textContent = score;
+
+                    // Check Level Progression
+                    if (score >= targetKills) {
+                        if (currentLevel < 3) {
+                            currentLevel++;
+                            score = 0;
+                            targetKills += 3;
+                            hudLevel.textContent = currentLevel;
+                            hudScore.textContent = score;
+                            hudTarget.textContent = targetKills;
+                            spawnEnemiesForLevel();
+                        } else {
+                            endDoomGame(true);
+                        }
+                    }
+                }
+            }
+            window.addEventListener('click', onShoot);
+
+            // Animation Loop
+            let animId;
+            const animate = () => {
+                animId = requestAnimationFrame(animate);
+
+                enemies.forEach(en => {
+                    en.mesh.position.z += en.speed; // Move toward player
+                    en.mesh.position.x += Math.sin(Date.now() * 0.005) * 0.05;
+
+                    // Reset position if passed player
+                    if (en.mesh.position.z > 2) {
+                        en.mesh.position.z = -40;
+                    }
+                });
+
+                renderer.render(scene, camera);
+            };
+            animate();
+
+            function endDoomGame(won) {
+                cancelAnimationFrame(animId);
+                window.removeEventListener('mousemove', onMouseMove);
+                window.removeEventListener('click', onShoot);
+                gameOverlay.classList.remove('active');
+                crosshair.style.display = 'none';
+                gameHud.style.display = 'none';
+                renderer.dispose();
+
+                if (won) {
+                    terminalOutput.innerHTML += `<p class="text-emerald-400 font-bold">🏆 VICTORY! You conquered all 3 DOOM levels and purged the system!</p>`;
+                }
+                terminalOutput.scrollTop = terminalOutput.scrollHeight;
+            }
+        }
+
+        // Project Modal Logic[cite: 3]
+        function openModal(title, desc, tags) {
+            document.getElementById('modalTitle').textContent = title;
+            document.getElementById('modalDescription').textContent = desc;
+            
+            const tagsContainer = document.getElementById('modalTags');
+            tagsContainer.innerHTML = '';
+            tags.forEach(tag => {
+                const badge = document.createElement('span');
+                badge.className = 'text-xs font-bold px-3 py-1.5 m3-pill bg-white/10 text-white';
+                badge.textContent = tag;
+                tagsContainer.appendChild(badge);
+            });
+
+            const modal = document.getElementById('projectModal');
+            const container = document.getElementById('modalContainer');
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+            container.classList.remove('scale-90');
+            container.classList.add('scale-100');
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('projectModal');
+            const container = document.getElementById('modalContainer');
+            container.classList.remove('scale-100');
+            container.classList.add('scale-90');
+            modal.classList.add('opacity-0', 'pointer-events-none');
+        }
+
+        // 3D Card Tilt Effect on Hover[cite: 3]
+        document.querySelectorAll('.project-card').forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left - rect.width / 2;
+                const y = e.clientY - rect.top - rect.height / 2;
+                card.style.transform = `perspective(1000px) rotateX(${-y / 15}deg) rotateY(${x / 15}deg) translateY(-8px) scale(1.02)`;
+            });
+
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0px) scale(1)`;
+            });
+        });
+    </script>
+</body>
+</html>
