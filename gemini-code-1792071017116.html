@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="en" data-accent="violet" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>my doom cave</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800;900&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+        :root {
+            /* Android 17 / Material Expressive 3 Expressive Spring Easing */
+            --ease-m3-expressive: cubic-bezier(0.34, 1.56, 0.64, 1);
+            --ease-m3-smooth: cubic-bezier(0.2, 0, 0, 1);
+            
+            /* Accent Palettes */
+            --accent-violet: #d0bcff;
+            --accent-violet-container: #4f378b;
+            --accent-violet-glow: rgba(208, 188, 255, 0.35);
+
+            --accent-mint: #a6f4c5;
+            --accent-mint-container: #005232;
+            --accent-mint-glow: rgba(166, 244, 197, 0.35);
+
+            --accent-coral: #ffb4a9;
+            --accent-coral-container: #8c1d18;
+            --accent-coral-glow: rgba(255, 180, 169, 0.35);
+        }
+
+        [data-accent="violet"] {
+            --accent-primary: var(--accent-violet);
+            --accent-container: var(--accent-violet-container);
+            --accent-glow: var(--accent-violet-glow);
+        }
+
+        [data-accent="mint"] {
+            --accent-primary: var(--accent-mint);
+            --accent-container: var(--accent-mint-container);
+            --accent-glow: var(--accent-mint-glow);
+        }
+
+        [data-accent="coral"] {
+            --accent-primary: var(--accent-coral);
+            --accent-container: var(--accent-coral-container);
+            --accent-glow: var(--accent-coral-glow);
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: #0f1115;
+            color: #e6e1e5;
+            overflow-x: hidden;
+            transition: background-color 0.4s var(--ease-m3-smooth);
+        }
+
+        .m3-surface {
+            background-color: #1a1c22;
+            border: 2px solid rgba(255, 255, 255, 0.08);
+            border-radius: 36px;
+            transition: all 0.4s var(--ease-m3-expressive);
+        }
+
+        .m3-surface-tonal {
+            background-color: #252830;
+            border: 2px solid transparent;
+            border-radius: 28px;
+            transition: all 0.4s var(--ease-m3-expressive);
+        }
+
+        .m3-pill {
+            border-radius: 9999px;
+            transition: all 0.35s var(--ease-m3-expressive);
+        }
+
+        @keyframes float-blob-1 {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(60px, -80px) scale(1.15); }
+            66% { transform: translate(-40px, 50px) scale(0.9); }
+        }
+
+        @keyframes float-blob-2 {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(-70px, 60px) scale(0.85); }
+            66% { transform: translate(50px, -60px) scale(1.2); }
+        }
+
+        .blob-1 {
+            animation: float-blob-1 18s ease-in-out infinite;
+            background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+        }
+
+        .blob-2 {
+            animation: float-blob-2 22s ease-in-out infinite;
+            background: radial-gradient(circle, rgba(168, 85, 247, 0.25) 0%, transparent 70%);
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 20px -5px var(--accent-glow); }
+            50% { box-shadow: 0 0 45px 10px var(--accent-glow); }
+        }
+
+        .pulse-badge {
+            animation: pulse-glow 3s infinite ease-in-out;
+        }
+
+        .spring-hover:hover {
+            transform: translateY(-8px) scale(1.03);
+            border-color: var(--accent-primary);
+            box-shadow: 0 20px 40px -15px var(--accent-glow);
+        }
+
+        .spring-hover:active {
+            transform: translateY(-2px) scale(0.98);
+        }
+
+        /* Smooth Tab Transition Animation */
+        .tab-content {
+            animation: fadeInGrid 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes fadeInGrid {
+            from { opacity: 0; transform: translateY(12px) scale(0.98); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+    </style>
+</head>
+<body class="font-sans min-h-screen relative selection:bg-[var(--accent-primary)] selection:text-black">
+
+    <!-- Floating Ambient Background Blobs -->
+    <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+        <div class="blob-1 absolute -top-20 -left-20 w-[500px] h-[500px] rounded-full filter blur-3xl opacity-70"></div>
+        <div class="blob-2 absolute -bottom-30 -right-20 w-[600px] h-[600px] rounded-full filter blur-3xl opacity-60"></div>
+    </div>
+
+    <!-- Sticky Expressive Navigation Header -->
+    <header class="sticky top-6 z-50 max-w-4xl mx-auto px-4">
+        <nav class="m3-surface px-6 py-4 flex items-center justify-between shadow-2xl">
+            <div class="flex items-center gap-3">
+                <span class="w-4 h-4 rounded-full bg-[var(--accent-primary)] pulse-badge"></span>
+                <span class="font-extrabold tracking-tight text-lg">my doom cave</span>
+            </div>
+
+            <!-- Material 3 Accent Palette Selector -->
+            <div class="flex items-center gap-2 bg-[#121418] p-1.5 rounded-full border border-white/10">
+                <button onclick="setAccent('violet')" class="w-7 h-7 rounded-full bg-[#d0bcff] hover:scale-125 transition-transform cursor-pointer" title="Electric Violet"></button>
+                <button onclick="setAccent('mint')" class="w-7 h-7 rounded-full bg-[#a6f4c5] hover:scale-125 transition-transform cursor-pointer" title="Neon Mint"></button>
+                <button onclick="setAccent('coral')" class="w-7 h-7 rounded-full bg-[#ffb4a9] hover:scale-125 transition-transform cursor-pointer" title="Cyber Coral"></button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Container -->
+    <main class="max-w-4xl mx-auto px-4 pt-12 pb-24 relative z-10 space-y-12">
+
+        <!-- Hero Section -->
+        <section class="m3-surface p-8 md:p-12 spring-hover relative overflow-hidden">
+            <div class="inline-flex items-center gap-2 px-5 py-2 m3-pill bg-[var(--accent-container)] text-[var(--accent-primary)] font-bold text-xs uppercase tracking-widest mb-6">
+                ✨ pro keyboard smasher
+            </div>
+            
+            <h1 class="text-4xl md:text-6xl font-black tracking-tight leading-none mb-6">
+                yo i make cool <span class="text-[var(--accent-primary)] underline decoration-wavy decoration-2">stuff on the internet.</span>
+            </h1>
+            
+            <p class="text-lg md:text-xl text-gray-300 max-w-2xl font-semibold leading-relaxed mb-8">
+                Professional keyboard smasher...
+            </p>
+
+            <!-- Socials Hub -->
+            <div class="flex flex-wrap items-center gap-4">
+                <a href="#projects" class="m3-pill px-6 py-4 bg-[var(--accent-primary)] text-black font-extrabold hover:scale-105 active:scale-95 transition-all shadow-lg shadow-[var(--accent-glow)]">
+                    Check out the builds ↓
+                </a>
+                <a href="https://github.com" target="_blank" class="m3-pill px-6 py-4 m3-surface-tonal text-white font-bold hover:bg-white/10 hover:scale-105 active:scale-95 transition-all">
+                    🐙 GitHub
+                </a>
+                <a href="https://discord.com" target="_blank" class="m3-pill px-6 py-4 m3-surface-tonal text-white font-bold hover:bg-white/10 hover:scale-105 active:scale-95 transition-all">
+                    💬 Discord
+                </a>
+            </div>
+        </section>
+
+        <!-- Projects & Custom ROMs Section (Tabbed & Animated) -->
+        <section id="projects" class="space-y-6 scroll-mt-28">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <h2 class="text-2xl font-black tracking-tight flex items-center gap-3">
+                    <span class="w-8 h-8 rounded-2xl bg-[var(--accent-container)] text-[var(--accent-primary)] flex items-center justify-center text-sm font-bold">01</span>
+                    <span id="category-heading">Stuff I Built</span>
+                </h2>
+                
+                <!-- Polished Animated Category Tab Switcher -->
+                <div class="flex items-center gap-1 bg-[#121418] p-1.5 rounded-full border border-white/10 self-start md:self-auto shadow-inner">
+                    <button onclick="switchCategory('projects')" id="cat-projects-btn" class="m3-pill px-5 py-2.5 bg-[var(--accent-primary)] text-black font-extrabold text-xs transition-all duration-300 cursor-pointer shadow-md">
+                        Apps & Games
+                    </button>
+                    <button onclick="switchCategory('roms')" id="cat-roms-btn" class="m3-pill px-5 py-2.5 text-gray-400 font-bold text-xs hover:text-white hover:bg-white/5 transition-all duration-300 cursor-pointer">
+                        Custom ROMs & Kernels
+                    </button>
+                </div>
+            </div>
+
+            <!-- TAB 1: Apps & Games Grid -->
+            <div id="grid-projects" class="tab-content grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Project 1: Evostrike -->
+                <div onclick="openModal('Evostrike', 'High-intensity tactical shooter experience featuring fluid movement, responsive gunplay, and competitive combat mechanics.', ['Roblox', 'Tactical', 'Shooter', '2026'], 'https://www.roblox.com/games/101024480392696/Evostrike', 'Play on Roblox ↗')" 
+                     class="project-card m3-surface p-6 spring-hover cursor-pointer group">
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="text-3xl">⚔️</span>
+                        <span class="text-xs font-mono px-3 py-1 m3-pill bg-white/5 group-hover:bg-[var(--accent-primary)] group-hover:text-black transition-colors">2026</span>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2 group-hover:text-[var(--accent-primary)] transition-colors">Evostrike</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed mb-4">High-intensity tactical shooter experience featuring fluid movement and competitive combat.</p>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="text-xs font-semibold px-3 py-1 rounded-full bg-white/5 text-gray-300">Roblox</span>
+                        <span class="text-xs font-semibold px-3 py-1 rounded-full bg-white/5 text-gray-300">Tactical</span>
+                    </div>
+                </div>
+
+                <!-- Project 2: Enraged -->
+                <div onclick="openModal('Enraged', 'High-octane action and combat Roblox experience featuring intense gameplay mechanics.', ['Roblox', 'Action', 'Combat', '2026'], 'https://www.roblox.com/games/73933694395235/enraged', 'Play on Roblox ↗')" 
+                     class="project-card m3-surface p-6 spring-hover cursor-pointer group">
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="text-3xl">🔥</span>
+                        <span class="text-xs font-mono px-3 py-1 m3-pill bg-white/5 group-hover:bg-[var(--accent-primary)] group-hover:text-black transition-colors">2026</span>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2 group-hover:text-[var(--accent-primary)] transition-colors">Enraged</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed mb-4">High-octane action and combat Roblox experience featuring intense gameplay mechanics.</p>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="text-xs font-semibold px-3 py-1 rounded-full bg-white/5 text-gray-300">Roblox</span>
+                        <span class="text-xs font-semibold px-3 py-1 rounded-full bg-white/5 text-gray-300">Action</span>
+                    </div>
+                </div>
+
+                <!-- Project 3 -->
+                <div onclick="openModal('DoomScroll Killer', 'A browser extension that locks you out of short-form feeds when your daily commit streak looks sad.', ['Extension', 'JavaScript'])" 
+                     class="project-card m3-surface p-6 spring-hover cursor-pointer group">
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="text-3xl">🛡️</span>
+                        <span class="text-xs font-mono px-3 py-1 m3-pill bg-white/5 group-hover:bg-[var(--accent-primary)] group-hover:text-black transition-colors">2026</span>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2 group-hover:text-[var(--accent-primary)] transition-colors">DoomScroll Killer</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed mb-4">Blocks addictive feeds until code actually gets pushed to GitHub.</p>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="text-xs font-semibold px-3 py-1 rounded-full bg-white/5 text-gray-300">Extension</span>
+                        <span class="text-xs font-semibold px-3 py-1 rounded-full bg-white/5 text-gray-300">JavaScript</span>
+                    </div>
+                </div>
+
+                <!-- Project 4: BODYCAM -->
+                <div onclick="openModal('BODYCAM', 'Ultra-realistic tactical first-person shooter built on Unreal Engine 5 featuring uncompressed audio, fisheye bodycam perspectives, and intense CQB combat.', ['Unreal Engine', 'FPS', 'Tactical', '2026'])" 
+                     class="project-card m3-surface p-6 spring-hover cursor-pointer group">
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="text-3xl">🎥</span>
+                        <span class="text-xs font-mono px-3 py-1 m3-pill bg-white/5 group-hover:bg-[var(--accent-primary)] group-hover:text-black transition-colors">2026</span>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2 group-hover:text-[var(--accent-primary)] transition-colors">BODYCAM</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed mb-4">Hyper-realistic tactical first-person shooter with immersive fisheye bodycam perspectives.</p>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="text-xs font-semibold px-3 py-1 rounded-full bg-white/5 text-gray-300">Unreal Engine</span>
+                        <span class="text-xs font-semibold px-3 py-1 rounded-full bg-white/5 text-gray-300">Tactical FPS</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 2: Custom ROMs & Kernels Grid (Hidden by default) -->
+            <div id="grid-roms" class="tab-content grid grid-cols-1 md:grid-cols-2 gap-6 hidden">
+                <!-- ROM 1: DerpFest 16.2 Unofficial -->
+                <div onclick="openModal('DerpFest 16.2 (Unofficial)', 'Status: UNOFFICIAL | Android: 16 QPR2 for OnePlus Ace 3 (astonc) by lumia830 (Updated 30/7/26). Use firmware 16.0.5.701.', ['DerpFest 16.2', 'Android 16 QPR2', 'OnePlus Ace 3', 'lumia830'], 'https://mega.nz/folder/Bmg3iATC#YoCkYBDjfPP240qjznlTaw', 'Mega Download ↗', 'https://t.me/diggleberrys/15', 'ScreenShots')" 
+                     class="project-card m3-surface p-6 spring-hover cursor-pointer group">
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="text-3xl">🧪</span>
+                        <span class="text-xs font-mono px-3 py-1 m3-pill bg-white/5 group-hover:bg-[var(--accent-primary)] group-hover:text-black transition-colors">astonc</span>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2 group-hover:text-[var(--accent-primary)] transition-colors">DerpFest 16.2 Unofficial</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed mb-4">Android 16 QPR2 build for OnePlus Ace 3 maintained by lumia830. Requires firmware 16.0.5.701.</p>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="text-xs font-semibold px-3 py-1 rounded-full bg-white/5 text-gray-300">Android 16 QPR2</span>
+                        <span class="text-xs font-semibold px-3 py-1 rounded-full bg-white/5 text-gray-300">lumia830</span>
+                    </div>
+                </div>
+
+                <!-- ROM 2: ColorOS 16 Debloat Suite -->
+                <div onclick="openModal('ColorOS 16 Debloat Suite', 'Deep package stripper leveraging Termux, Canta, KernelSU Next, and LSPosed modules for maximum performance and security bypass on OnePlus Ace 3.', ['KernelSU Next', 'LSPosed', 'Termux', '2026'])" 
+                     class="project-card m3-surface p-6 spring-hover cursor-pointer group">
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="text-3xl">⚡</span>
+                        <span class="text-xs font-mono px-3 py-1 m3-pill bg-white/5 group-hover:bg-[var(--accent-primary)] group-hover:text-black transition-colors">Rooted</span>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2 group-hover:text-[var(--accent-primary)] transition-colors">ColorOS 16 Debloat Suite</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed mb-4">Aggressive system app stripping, root management, and LSPosed hook configurations.</p>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="text-xs font-semibold px-3 py-1 rounded-full bg-white/5 text-gray-300">KernelSU Next</span>
+                        <span class="text-xs font-semibold px-3 py-1 rounded-full bg-white/5 text-gray-300">Canta</span>
+                    </div>
+                </div>
+
+                <!-- ROM 3: Redmi 6 Pro Daikura Kernel -->
+                <div onclick="openModal('Redmi 6 Pro Daikura Kernel', 'Custom zRAM scaling, thermal management, and Daikura LineageOS kernel tuning for legacy Snapdragon performance on sakura.', ['Daikura LOS', 'zRAM', 'Kernel', '2026'])" 
+                     class="project-card m3-surface p-6 spring-hover cursor-pointer group">
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="text-3xl">🔥</span>
+                        <span class="text-xs font-mono px-3 py-1 m3-pill bg-white/5 group-hover:bg-[var(--accent-primary)] group-hover:text-black transition-colors">sakura</span>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2 group-hover:text-[var(--accent-primary)] transition-colors">Redmi 6 Pro Daikura Kernel</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed mb-4">Kernel manager tuning, thermal profiles, and RAM optimization for legacy hardware.</p>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="text-xs font-semibold px-3 py-1 rounded-full bg-white/5 text-gray-300">LineageOS</span>
+                        <span class="text-xs font-semibold px-3 py-1 rounded-full bg-white/5 text-gray-300">Kernel Tweaks</span>
+                    </div>
+                </div>
+
+                <!-- ROM 4: iOS TrollStore & Dopamine Vault -->
+                <div onclick="openModal('TrollStore & Dopamine IPA Vault', 'Persistent persistence helper configuration and system daemon cleaner scripts on iPhone 6s running iOS 15.8.7.', ['iOS 15', 'TrollStore', 'Dopamine', '2026'])" 
+                     class="project-card m3-surface p-6 spring-hover cursor-pointer group">
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="text-3xl">🍏</span>
+                        <span class="text-xs font-mono px-3 py-1 m3-pill bg-white/5 group-hover:bg-[var(--accent-primary)] group-hover:text-black transition-colors">iOS 15.8.7</span>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2 group-hover:text-[var(--accent-primary)] transition-colors">TrollStore & Dopamine Vault</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed mb-4">Jailbroken iOS environment with signed IPAs and background daemon optimization.</p>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="text-xs font-semibold px-3 py-1 rounded-full bg-white/5 text-gray-300">TrollStore</span>
+                        <span class="text-xs font-semibold px-3 py-1 rounded-full bg-white/5 text-gray-300">Dopamine</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- View Archive Modal Trigger Button -->
+            <div class="flex justify-center pt-2">
+                <button onclick="openArchiveModal()" class="m3-pill px-8 py-4 m3-surface-tonal text-white font-extrabold hover:bg-[var(--accent-primary)] hover:text-black transition-all cursor-pointer shadow-lg">
+                    📂 View Project Archive (+8 More Builds)
+                </button>
+            </div>
+        </section>
+
+        <!-- Maintained Devices Lab Widget -->
+        <section class="m3-surface p-8 spring-hover relative overflow-hidden space-y-6">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <span class="w-3 h-3 rounded-full bg-[var(--accent-primary)] pulse-badge"></span>
+                    <h3 class="text-lg font-black tracking-tight text-white">Maintained Devices</h3>
+                </div>
+                <span class="text-xs font-mono px-3 py-1 m3-pill bg-white/5 text-[var(--accent-primary)] border border-white/10">Active Hardware</span>
+            </div>
+
+            <!-- Device Selector Tabs -->
+            <div class="flex flex-wrap gap-2">
+                <button onclick="switchDevice('oneplus')" id="tab-oneplus" class="m3-pill px-5 py-2.5 bg-[var(--accent-primary)] text-black font-extrabold text-xs transition-all cursor-pointer shadow-md">
+                    OnePlus Ace 3 (astonc)
+                </button>
+                <button onclick="switchDevice('redmi')" id="tab-redmi" class="m3-pill px-5 py-2.5 m3-surface-tonal text-white font-bold text-xs hover:bg-white/10 transition-all cursor-pointer border border-white/10">
+                    Redmi 6 Pro (sakura)
+                </button>
+            </div>
+
+            <!-- Device Specs Display Card -->
+            <div class="m3-surface-tonal p-6 border border-white/5 space-y-3">
+                <div class="flex justify-between items-center">
+                    <h4 id="device-title" class="text-base font-bold text-white">OnePlus Ace 3 (astonc)</h4>
+                    <span id="device-status" class="text-xs font-mono px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Rooted / KernelSU Next</span>
+                </div>
+                <p id="device-desc" class="text-sm text-gray-300 leading-relaxed font-semibold">
+                    Primary custom ROM rig... And Porting?
+                </p>
+                <div id="device-tags" class="flex flex-wrap gap-2 pt-2">
+                    <span class="text-[10px] font-semibold px-2.5 py-1 rounded-full bg-white/5 text-gray-300">ColorOS 16</span>
+                    <span class="text-[10px] font-semibold px-2.5 py-1 rounded-full bg-white/5 text-gray-300">KernelSU Next</span>
+                    <span class="text-[10px] font-semibold px-2.5 py-1 rounded-full bg-white/5 text-gray-300">Crave Cloud</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Current Focus Section -->
+        <section class="m3-surface p-8 spring-hover relative overflow-hidden space-y-6">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <span class="w-3 h-3 rounded-full bg-[var(--accent-primary)] pulse-badge"></span>
+                    <h3 class="text-lg font-black tracking-tight text-white">Current Focus</h3>
+                </div>
+                <span class="text-xs font-mono px-3 py-1 m3-pill bg-white/5 text-[var(--accent-primary)] border border-white/10">Live Status</span>
+            </div>
+
+            <div class="grid grid-cols-1 gap-4">
+                <!-- Status Card 1 -->
+                <div class="m3-surface-tonal p-5 space-y-2 border border-white/5 flex items-start gap-4">
+                    <span class="text-2xl mt-1">⚡</span>
+                    <div>
+                        <div class="text-xs font-mono text-gray-400 uppercase tracking-widest">Active Development</div>
+                        <div class="text-base font-bold text-white">shh i aint telling you</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Standard Project Modal Popup for Main Grid Cards -->
+    <div id="projectModal" class="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300">
+        <div class="m3-surface bg-[#1e2028] p-8 max-w-lg w-full transform scale-90 transition-transform duration-300 space-y-6 border-[var(--accent-primary)]/40 shadow-2xl" id="modalContainer">
+            <div class="flex justify-between items-center">
+                <h3 id="modalTitle" class="text-2xl font-black text-[var(--accent-primary)]">Project Title</h3>
+                <button onclick="closeModal()" class="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center font-bold cursor-pointer">✕</button>
+            </div>
+            <p id="modalDescription" class="text-gray-300 leading-relaxed font-semibold">Project description goes here.</p>
+            <div id="modalTags" class="flex flex-wrap gap-2"></div>
+            <div class="pt-4 flex items-center justify-between">
+                <div id="modalExtraAction" class="flex flex-wrap gap-2"></div>
+                <button onclick="closeModal()" class="m3-pill px-6 py-3 bg-[var(--accent-primary)] text-black font-bold hover:scale-105 transition-transform cursor-pointer">
+                    Got it 🤝
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Archive Popup Modal with Backdrop Blur -->
+    <div id="archiveModal" class="fixed inset-0 z-50 bg-black/75 backdrop-blur-md flex items-center justify-center p-4 md:p-8 opacity-0 pointer-events-none transition-all duration-300">
+        <div class="m3-surface bg-[#16181d] p-6 md:p-8 max-w-3xl w-full max-h-[85vh] flex flex-col transform scale-95 transition-transform duration-300 border-[var(--accent-primary)]/40 shadow-2xl" id="archiveContainer">
+            
+            <!-- Modal Header & Close -->
+            <div class="flex justify-between items-center pb-4 border-b border-white/10 mb-4">
+                <div>
+                    <h3 id="archiveHeaderTitle" class="text-2xl font-black text-[var(--accent-primary)]">Project Archive Vault</h3>
+                    <p id="archiveHeaderSub" class="text-xs text-gray-400 font-mono mt-1">Search or filter through past builds, ROM compilers, and web experiments.</p>
+                </div>
+                <button onclick="closeArchiveModal()" class="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center font-bold cursor-pointer">✕</button>
+            </div>
+
+            <!-- Archive Category Quick Filters -->
+            <div class="flex flex-wrap gap-2 mb-4">
+                <button onclick="filterArchiveCategory('all')" id="arch-filter-all" class="m3-pill px-4 py-1.5 bg-[var(--accent-primary)] text-black font-bold text-xs cursor-pointer">All Builds</button>
+                <button onclick="filterArchiveCategory('app')" id="arch-filter-app" class="m3-pill px-4 py-1.5 m3-surface-tonal text-white font-bold text-xs hover:bg-white/10 cursor-pointer border border-white/10">Apps & Web</button>
+                <button onclick="filterArchiveCategory('rom')" id="arch-filter-rom" class="m3-pill px-4 py-1.5 m3-surface-tonal text-white font-bold text-xs hover:bg-white/10 cursor-pointer border border-white/10">ROMs & Kernels</button>
+            </div>
+
+            <!-- VIEW 1: Search Bar & Archive List -->
+            <div id="archiveMainView" class="flex flex-col flex-1 overflow-hidden">
+                <div class="relative mb-4 flex-shrink-0">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-gray-400 font-mono">🔍</span>
+                    <input type="text" id="archiveSearch" onkeyup="filterArchive()" placeholder="Search archive builds..." 
+                           class="w-full bg-[#0f1115] border border-white/10 rounded-2xl py-3.5 pl-12 pr-4 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-[var(--accent-primary)] font-mono transition-colors">
+                </div>
+
+                <div id="archiveList" class="overflow-y-auto space-y-4 pr-2 flex-1">
+                    
+                    <!-- Archive Item 1 (App) -->
+                    <div data-category="app" onclick="openArchiveDetail('QUEUE-IFY Hair Studio', 'Humorous Qing Dynasty queue braid (辫子) hair transformation web studio built for a school project.', ['HTML5', 'Canvas', 'JS'])" 
+                         class="archive-item m3-surface-tonal p-5 hover:border-[var(--accent-primary)] cursor-pointer transition-all group">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="text-lg font-bold group-hover:text-[var(--accent-primary)] transition-colors">🐉 QUEUE-IFY Hair Studio</h4>
+                            <span class="text-xs font-mono px-2.5 py-1 m3-pill bg-white/5">2026</span>
+                        </div>
+                        <p class="text-gray-400 text-xs leading-relaxed mb-3">Hilarious browser filter applying historical Qing queue braids to portrait uploads for a school project.</p>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="text-[10px] font-semibold px-2.5 py-1 rounded-full bg-white/5 text-gray-300">Canvas API</span>
+                            <span class="text-[10px] font-semibold px-2.5 py-1 rounded-full bg-white/5 text-gray-300">School Project</span>
+                        </div>
+                    </div>
+
+                    <!-- Archive Item 2 (ROM) -->
+                    <div data-category="rom" onclick="openArchiveDetail('DerpFest 16.2 Unofficial', 'Status: UNOFFICIAL | Android: 16 QPR2 for OnePlus Ace 3 by lumia830 (Updated 30/7/26). Use firmware 16.0.5.701.', ['DerpFest 16.2', 'lumia830'], 'https://mega.nz/folder/Bmg3iATC#YoCkYBDjfPP240qjznlTaw', 'Mega Download ↗')" 
+                         class="archive-item m3-surface-tonal p-5 hover:border-[var(--accent-primary)] cursor-pointer transition-all group">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="text-lg font-bold group-hover:text-[var(--accent-primary)] transition-colors">🤖 DerpFest 16.2 (Unofficial)</h4>
+                            <span class="text-xs font-mono px-2.5 py-1 m3-pill bg-white/5">30/7/26</span>
+                        </div>
+                        <p class="text-gray-400 text-xs leading-relaxed mb-3">Android 16 QPR2 build for OnePlus Ace 3 by lumia830. Requires firmware 16.0.5.701.</p>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="text-[10px] font-semibold px-2.5 py-1 rounded-full bg-white/5 text-gray-300">Android 16 QPR2</span>
+                            <span class="text-[10px] font-semibold px-2.5 py-1 rounded-full bg-white/5 text-gray-300">OnePlus Ace 3</span>
+                        </div>
+                    </div>
+
+                    <!-- Archive Item 3 (ROM) -->
+                    <div data-category="rom" onclick="openArchiveDetail('ColorOS Debloat Suite', 'Advanced package stripper leveraging Termux, Canta, and KernelSU Next for aggressive system optimization.', ['Root', 'Termux'])" 
+                         class="archive-item m3-surface-tonal p-5 hover:border-[var(--accent-primary)] cursor-pointer transition-all group">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="text-lg font-bold group-hover:text-[var(--accent-primary)] transition-colors">⚡ ColorOS Debloat Suite</h4>
+                            <span class="text-xs font-mono px-2.5 py-1 m3-pill bg-white/5">2026</span>
+                        </div>
+                        <p class="text-gray-400 text-xs leading-relaxed mb-3">Deep system package removal, debloating scripts, and LSPosed security bypass setup on OnePlus Ace 3.</p>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="text-[10px] font-semibold px-2.5 py-1 rounded-full bg-white/5 text-gray-300">KernelSU Next</span>
+                            <span class="text-[10px] font-semibold px-2.5 py-1 rounded-full bg-white/5 text-gray-300">Shell Script</span>
+                        </div>
+                    </div>
+
+                    <!-- Archive Item 4 (ROM) -->
+                    <div data-category="rom" onclick="openArchiveDetail('TrollStore IPA Vault', 'Customized jailbreak and TrollStore IPA management setup for iOS background daemon optimization.', ['iOS', 'Dopamine'])" 
+                         class="archive-item m3-surface-tonal p-5 hover:border-[var(--accent-primary)] cursor-pointer transition-all group">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="text-lg font-bold group-hover:text-[var(--accent-primary)] transition-colors">🍏 TrollStore IPA Vault</h4>
+                            <span class="text-xs font-mono px-2.5 py-1 m3-pill bg-white/5">2026</span>
+                        </div>
+                        <p class="text-gray-400 text-xs leading-relaxed mb-3">Persistent persistence helper configs and system daemon cleaner scripts on iPhone 6s running iOS 15.</p>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="text-[10px] font-semibold px-2.5 py-1 rounded-full bg-white/5 text-gray-300">iOS 15</span>
+                            <span class="text-[10px] font-semibold px-2.5 py-1 rounded-full bg-white/5 text-gray-300">TrollStore</span>
+                        </div>
+                    </div>
+
+                    <!-- Archive Item 5 (ROM) -->
+                    <div data-category="rom" onclick="openArchiveDetail('Redmi 6 Pro Kernel Optimizer', 'Custom zRAM tuning and Daikura LOS kernel tweaking for legacy Snapdragon performance.', ['Android', 'Kernel'])" 
+                         class="archive-item m3-surface-tonal p-5 hover:border-[var(--accent-primary)] cursor-pointer transition-all group">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="text-lg font-bold group-hover:text-[var(--accent-primary)] transition-colors">🔥 Redmi 6 Pro Kernel Tweaks</h4>
+                            <span class="text-xs font-mono px-2.5 py-1 m3-pill bg-white/5">2026</span>
+                        </div>
+                        <p class="text-gray-400 text-xs leading-relaxed mb-3">RAM management and custom kernel flashing scripts to maximize battery life and fluidity on Sakura.</p>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="text-[10px] font-semibold px-2.5 py-1 rounded-full bg-white/5 text-gray-300">Daikura LOS</span>
+                            <span class="text-[10px] font-semibold px-2.5 py-1 rounded-full bg-white/5 text-gray-300">zRAM</span>
+                        </div>
+                    </div>
+
+                    <!-- Archive Item 6 (App) -->
+                    <div data-category="app" onclick="openArchiveDetail('Three.js Brutalist Terminal', 'Interactive web terminal and 3D mini-scene built with brutalist monochrome aesthetics.', ['Three.js', 'WebGL'])" 
+                         class="archive-item m3-surface-tonal p-5 hover:border-[var(--accent-primary)] cursor-pointer transition-all group">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="text-lg font-bold group-hover:text-[var(--accent-primary)] transition-colors">🕹️ Three.js Brutalist Terminal</h4>
+                            <span class="text-xs font-mono px-2.5 py-1 m3-pill bg-white/5">2026</span>
+                        </div>
+                        <p class="text-gray-400 text-xs leading-relaxed mb-4">Custom JavaScript terminal shell paired with real-time WebGL rendering environments.</p>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="text-[10px] font-semibold px-2.5 py-1 rounded-full bg-white/5 text-gray-300">Three.js</span>
+                            <span class="text-[10px] font-semibold px-2.5 py-1 rounded-full bg-white/5 text-gray-300">WebGL</span>
+                        </div>
+                    </div>
+
+                    <!-- Archive Item 7 (App) -->
+                    <div data-category="app" onclick="openArchiveDetail('Untitled Arsenal', 'Fast-paced weapon-rotation gun game Roblox experience featuring rapid combat and intense skirmishes.', ['Roblox', 'Shooter', 'Action', '2026'], 'https://www.roblox.com/games/133576815521410/Untitled-arsenal')" 
+                         class="archive-item m3-surface-tonal p-5 hover:border-[var(--accent-primary)] cursor-pointer transition-all group">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="text-lg font-bold group-hover:text-[var(--accent-primary)] transition-colors">🎯 Untitled Arsenal</h4>
+                            <span class="text-xs font-mono px-2.5 py-1 m3-pill bg-white/5">2026</span>
+                        </div>
+                        <p class="text-gray-400 text-xs leading-relaxed mb-4">Fast-paced weapon-rotation gun game Roblox experience featuring rapid combat and intense skirmishes.</p>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="text-[10px] font-semibold px-2.5 py-1 rounded-full bg-white/5 text-gray-300">Roblox</span>
+                            <span class="text-[10px] font-semibold px-2.5 py-1 rounded-full bg-white/5 text-gray-300">Shooter</span>
+                        </div>
+                    </div>
+
+                    <!-- Archive Item 8 (ROM) -->
+                    <div data-category="rom" onclick="openArchiveDetail('Windows 10 EXM Optimizer', 'Custom PowerShell optimization scripts for stripping telemetry and boosting gaming frame rates on legacy i7 rigs.', ['PowerShell', 'Windows'])" 
+                         class="archive-item m3-surface-tonal p-5 hover:border-[var(--accent-primary)] cursor-pointer transition-all group">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="text-lg font-bold group-hover:text-[var(--accent-primary)] transition-colors">💻 EXM Windows Tweaker</h4>
+                            <span class="text-xs font-mono px-2.5 py-1 m3-pill bg-white/5">2026</span>
+                        </div>
+                        <p class="text-gray-400 text-xs leading-relaxed mb-4">Aggressive system responsiveness tweaking and resource liberation scripts for Intel i7-6700 PCs.</p>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="text-[10px] font-semibold px-2.5 py-1 rounded-full bg-white/5 text-gray-300">PowerShell</span>
+                            <span class="text-[10px] font-semibold px-2.5 py-1 rounded-full bg-white/5 text-gray-300">System Optimization</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- VIEW 2: In-Tab Project Detail View (Hidden by default) -->
+            <div id="archiveDetailView" class="hidden flex-col space-y-6 overflow-y-auto pr-2 max-h-[60vh]">
+                <div>
+                    <button onclick="backToArchiveList()" class="m3-pill px-5 py-2.5 m3-surface-tonal text-white text-xs font-extrabold hover:bg-white/10 hover:scale-105 transition-all inline-flex items-center gap-2 cursor-pointer border border-white/10">
+                        ← Back to Archive
+                    </button>
+                </div>
+                <div class="space-y-4">
+                    <h4 id="archDetailTitle" class="text-2xl font-black text-[var(--accent-primary)]">Project Title</h4>
+                    <p id="archDetailDesc" class="text-gray-300 leading-relaxed font-semibold text-sm md:text-base">Description goes here.</p>
+                    <div id="archDetailTags" class="flex flex-wrap gap-2 pt-2"></div>
+                    <div id="archDetailExtraAction" class="pt-2 flex flex-wrap gap-2"></div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Script Logic -->
+    <script>
+        // Accent Switcher Logic
+        function setAccent(theme) {
+            document.documentElement.setAttribute('data-accent', theme);
+            localStorage.setItem('portfolio_accent', theme);
+        }
+
+        const savedAccent = localStorage.getItem('portfolio_accent');
+        if (savedAccent) {
+            setAccent(savedAccent);
+        }
+
+        // Category Tab Switcher Logic with Animated Fade & Slide Reflow
+        function switchCategory(cat) {
+            const projectsGrid = document.getElementById('grid-projects');
+            const romsGrid = document.getElementById('grid-roms');
+            const projectsBtn = document.getElementById('cat-projects-btn');
+            const romsBtn = document.getElementById('cat-roms-btn');
+            const heading = document.getElementById('category-heading');
+
+            let activeGrid;
+            if (cat === 'projects') {
+                romsGrid.classList.add('hidden');
+                projectsGrid.classList.remove('hidden');
+                activeGrid = projectsGrid;
+                heading.textContent = 'Stuff I Built';
+                projectsBtn.className = 'm3-pill px-5 py-2.5 bg-[var(--accent-primary)] text-black font-extrabold text-xs transition-all duration-300 cursor-pointer shadow-md';
+                romsBtn.className = 'm3-pill px-5 py-2.5 text-gray-400 font-bold text-xs hover:text-white hover:bg-white/5 transition-all duration-300 cursor-pointer';
+            } else {
+                projectsGrid.classList.add('hidden');
+                romsGrid.classList.remove('hidden');
+                activeGrid = romsGrid;
+                heading.textContent = 'Custom ROMs & System Porting';
+                romsBtn.className = 'm3-pill px-5 py-2.5 bg-[var(--accent-primary)] text-black font-extrabold text-xs transition-all duration-300 cursor-pointer shadow-md';
+                projectsBtn.className = 'm3-pill px-5 py-2.5 text-gray-400 font-bold text-xs hover:text-white hover:bg-white/5 transition-all duration-300 cursor-pointer';
+            }
+
+            // Re-trigger fade & slide animation smoothly on tab switch
+            activeGrid.style.animation = 'none';
+            activeGrid.offsetHeight; // trigger reflow
+            activeGrid.style.animation = null;
+        }
+
+        // Maintained Devices Interactive Switcher Logic (iPhone removed)
+        const deviceData = {
+            oneplus: {
+                title: "OnePlus Ace 3 (astonc)",
+                status: "Rooted / KernelSU Next",
+                statusClass: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
+                desc: "Primary custom ROM rig... And Porting?",
+                tags: ["ColorOS 16", "KernelSU Next", "Crave Cloud"]
+            },
+            redmi: {
+                title: "Redmi 6 Pro (sakura)",
+                status: "Custom ROM / Daikura Kernel",
+                statusClass: "bg-amber-500/10 text-amber-400 border-amber-500/20",
+                desc: "tuned for MAXX performance till its diggle berrys r burnt",
+                tags: ["Daikura LOS", "zRAM Tuning", "Snapdragon 625"]
+            }
+        };
+
+        function switchDevice(key) {
+            const data = deviceData[key];
+            document.getElementById('device-title').textContent = data.title;
+            
+            const statusEl = document.getElementById('device-status');
+            statusEl.textContent = data.status;
+            statusEl.className = `text-xs font-mono px-2.5 py-1 rounded-full border ${data.statusClass}`;
+            
+            document.getElementById('device-desc').textContent = data.desc;
+
+            const tagsContainer = document.getElementById('device-tags');
+            tagsContainer.innerHTML = '';
+            data.tags.forEach(tag => {
+                const badge = document.createElement('span');
+                badge.className = 'text-[10px] font-semibold px-2.5 py-1 rounded-full bg-white/5 text-gray-300';
+                badge.textContent = tag;
+                tagsContainer.appendChild(badge);
+            });
+
+            // Update Tab Active Styles
+            ['oneplus', 'redmi'].forEach(k => {
+                const btn = document.getElementById(`tab-${k}`);
+                if (k === key) {
+                    btn.className = 'm3-pill px-5 py-2.5 bg-[var(--accent-primary)] text-black font-extrabold text-xs transition-all cursor-pointer shadow-md';
+                } else {
+                    btn.className = 'm3-pill px-5 py-2.5 m3-surface-tonal text-white font-bold text-xs hover:bg-white/10 transition-all cursor-pointer border border-white/10';
+                }
+            });
+        }
+
+        // Archive Modal Control & Filtering Logic
+        let activeArchiveFilter = 'all';
+
+        function openArchiveModal() {
+            backToArchiveList(); 
+            filterArchiveCategory('all');
+            const modal = document.getElementById('archiveModal');
+            const container = document.getElementById('archiveContainer');
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+            container.classList.remove('scale-95');
+            container.classList.add('scale-100');
+            document.getElementById('archiveSearch').focus();
+        }
+
+        function closeArchiveModal() {
+            const modal = document.getElementById('archiveModal');
+            const container = document.getElementById('archiveContainer');
+            container.classList.remove('scale-100');
+            container.classList.add('scale-95');
+            modal.classList.add('opacity-0', 'pointer-events-none');
+        }
+
+        function filterArchiveCategory(category) {
+            activeArchiveFilter = category;
+            
+            // Update filter pill styles
+            ['all', 'app', 'rom'].forEach(cat => {
+                const btn = document.getElementById(`arch-filter-${cat}`);
+                if (cat === category) {
+                    btn.className = 'm3-pill px-4 py-1.5 bg-[var(--accent-primary)] text-black font-bold text-xs cursor-pointer shadow-md';
+                } else {
+                    btn.className = 'm3-pill px-4 py-1.5 m3-surface-tonal text-white font-bold text-xs hover:bg-white/10 cursor-pointer border border-white/10';
+                }
+            });
+
+            filterArchive();
+        }
+
+        // Combined Search & Category Filter Logic
+        function filterArchive() {
+            const query = document.getElementById('archiveSearch').value.toLowerCase();
+            const items = document.querySelectorAll('.archive-item');
+
+            items.forEach(item => {
+                const text = item.textContent.toLowerCase();
+                const cat = item.getAttribute('data-category');
+                
+                const matchesCategory = (activeArchiveFilter === 'all' || cat === activeArchiveFilter);
+                const matchesSearch = text.includes(query);
+
+                if (matchesCategory && matchesSearch) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+
+        // In-Tab Archive Detail Navigation
+        function openArchiveDetail(title, desc, tags, link, linkText) {
+            document.getElementById('archDetailTitle').textContent = title;
+            document.getElementById('archDetailDesc').textContent = desc;
+
+            const tagsContainer = document.getElementById('archDetailTags');
+            tagsContainer.innerHTML = '';
+            tags.forEach(tag => {
+                const badge = document.createElement('span');
+                badge.className = 'text-xs font-bold px-3 py-1.5 m3-pill bg-white/10 text-white';
+                badge.textContent = tag;
+                tagsContainer.appendChild(badge);
+            });
+
+            const extraAction = document.getElementById('archDetailExtraAction');
+            extraAction.innerHTML = '';
+            if (link) {
+                const a = document.createElement('a');
+                a.href = link;
+                a.target = '_blank';
+                a.className = 'm3-pill px-6 py-3 m3-surface-tonal text-white font-bold hover:bg-white/10 hover:scale-105 transition-all inline-flex items-center gap-2 border border-white/10';
+                a.innerHTML = linkText || 'Open Link ↗';
+                extraAction.appendChild(a);
+            }
+
+            // Switch Header & Views
+            document.getElementById('archiveHeaderTitle').textContent = 'Project Breakdown';
+            document.getElementById('archiveHeaderSub').textContent = 'Viewing details inside archive vault.';
+            document.getElementById('archiveMainView').classList.add('hidden');
+            document.getElementById('archiveDetailView').classList.remove('hidden');
+            document.getElementById('archiveDetailView').classList.add('flex');
+        }
+
+        function backToArchiveList() {
+            document.getElementById('archiveHeaderTitle').textContent = 'Project Archive Vault';
+            document.getElementById('archiveHeaderSub').textContent = 'Search or filter through past builds, ROM compilers, and web experiments.';
+            document.getElementById('archiveDetailView').classList.remove('flex');
+            document.getElementById('archiveDetailView').classList.add('hidden');
+            document.getElementById('archiveMainView').classList.remove('hidden');
+            document.getElementById('archiveSearch').value = '';
+            filterArchive();
+        }
+
+        // Main Grid Project Modal Logic (Supports multiple buttons/links)
+        function openModal(title, desc, tags, link1, text1, link2, text2) {
+            document.getElementById('modalTitle').textContent = title;
+            document.getElementById('modalDescription').textContent = desc;
+            
+            const tagsContainer = document.getElementById('modalTags');
+            tagsContainer.innerHTML = '';
+            tags.forEach(tag => {
+                const badge = document.createElement('span');
+                badge.className = 'text-xs font-bold px-3 py-1.5 m3-pill bg-white/10 text-white';
+                badge.textContent = tag;
+                tagsContainer.appendChild(badge);
+            });
+
+            const extraAction = document.getElementById('modalExtraAction');
+            extraAction.innerHTML = '';
+            
+            if (link1) {
+                const a1 = document.createElement('a');
+                a1.href = link1;
+                a1.target = '_blank';
+                a1.className = 'm3-pill px-5 py-3 m3-surface-tonal text-white font-bold hover:bg-white/10 hover:scale-105 transition-all inline-flex items-center gap-2 border border-white/10 text-xs';
+                a1.innerHTML = text1 || 'Open Link ↗';
+                extraAction.appendChild(a1);
+            }
+
+            if (link2) {
+                const a2 = document.createElement('a');
+                a2.href = link2;
+                a2.target = '_blank';
+                a2.className = 'm3-pill px-5 py-3 m3-surface-tonal text-white font-bold hover:bg-white/10 hover:scale-105 transition-all inline-flex items-center gap-2 border border-white/10 text-xs';
+                a2.innerHTML = text2 || 'ScreenShots';
+                extraAction.appendChild(a2);
+            }
+
+            const modal = document.getElementById('projectModal');
+            const container = document.getElementById('modalContainer');
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+            container.classList.remove('scale-90');
+            container.classList.add('scale-100');
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('projectModal');
+            const container = document.getElementById('modalContainer');
+            container.classList.remove('scale-100');
+            container.classList.add('scale-90');
+            modal.classList.add('opacity-0', 'pointer-events-none');
+        }
+
+        // 3D Card Tilt Effect on Hover
+        document.querySelectorAll('.project-card').forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left - rect.width / 2;
+                const y = e.clientY - rect.top - rect.height / 2;
+                card.style.transform = `perspective(1000px) rotateX(${-y / 15}deg) rotateY(${x / 15}deg) translateY(-8px) scale(1.02)`;
+            });
+
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0px) scale(1)`;
+            });
+        });
+    </script>
+</body>
+</html>
