@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-accent="violet">
+<html lang="en" data-accent="violet" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -54,6 +54,10 @@
             --accent-primary: var(--accent-coral);
             --accent-container: var(--accent-coral-container);
             --accent-glow: var(--accent-coral-glow);
+        }
+
+        html {
+            scroll-behavior: smooth;
         }
 
         body {
@@ -131,60 +135,9 @@
         .terminal-cursor {
             animation: cursor-blink 0.8s infinite;
         }
-
-        /* 3D Doom Shooter Game Overlay */
-        #game-overlay {
-            position: fixed;
-            inset: 0;
-            z-index: 9998;
-            background: black;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.3s ease-in-out;
-        }
-        #game-overlay.active {
-            opacity: 1;
-            pointer-events: auto;
-        }
-        #crosshair {
-            position: absolute;
-            top: 50%; left: 50%;
-            width: 24px; height: 24px;
-            transform: translate(-50%, -50%);
-            pointer-events: none;
-            display: none;
-            z-index: 9999;
-        }
-        #crosshair::before, #crosshair::after {
-            content: '';
-            position: absolute;
-            background: var(--accent-primary);
-        }
-        #crosshair::before { top: 10px; left: 0; width: 24px; height: 4px; }
-        #crosshair::after { top: 0; left: 10px; width: 4px; height: 24px; }
-
-        #game-hud {
-            position: absolute;
-            top: 20px; left: 20px;
-            color: white;
-            font-family: monospace;
-            font-size: 18px;
-            display: none;
-            z-index: 9999;
-            background: rgba(0,0,0,0.7);
-            padding: 12px 24px;
-            border-radius: 16px;
-            border: 1px solid rgba(255,255,255,0.2);
-            backdrop-filter: blur(10px);
-        }
     </style>
 </head>
 <body class="font-sans min-h-screen relative selection:bg-[var(--accent-primary)] selection:text-black">
-
-    <!-- 3D Doom Shooter Game Overlay -->
-    <div id="game-overlay"></div>
-    <div id="crosshair"></div>
-    <div id="game-hud">Level <span id="hud-level">1</span>/3 | Kills: <span id="hud-score">0</span>/<span id="hud-target">5</span></div>
 
     <!-- Floating Ambient Background Blobs -->
     <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden">
@@ -237,9 +190,6 @@
                 <a href="https://discord.com" target="_blank" class="m3-pill px-6 py-4 m3-surface-tonal text-white font-bold hover:bg-white/10 hover:scale-105 active:scale-95 transition-all">
                     💬 Discord
                 </a>
-                <a href="https://linkedin.com" target="_blank" class="m3-pill px-6 py-4 m3-surface-tonal text-white font-bold hover:bg-white/10 hover:scale-105 active:scale-95 transition-all">
-                    💼 LinkedIn
-                </a>
             </div>
         </section>
 
@@ -251,11 +201,11 @@
                     <span class="w-3 h-3 rounded-full bg-yellow-500/80"></span>
                     <span class="w-3 h-3 rounded-full bg-green-500/80"></span>
                 </div>
-                <span class="text-xs text-gray-500 font-sans">terminal.sh — bash (try: help, fetch, doom)</span>
+                <span class="text-xs text-gray-500 font-sans">terminal.sh — bash (try: help, fetch, clear)</span>
             </div>
 
             <div id="terminal-output" class="space-y-2 mb-4 max-h-48 overflow-y-auto text-gray-300">
-                <p>&gt; <span class="text-[var(--accent-primary)]">System ready.</span> Type <span class="text-amber-300">help</span> for commands[cite: 3] or <span class="text-red-400">doom</span> to launch the 3-level 3D shooter!</p>
+                <p>&gt; <span class="text-[var(--accent-primary)]">System ready.</span> Type <span class="text-amber-300">help</span> for commands or <span class="text-emerald-400">fetch</span> for system specs.</p>
             </div>
 
             <div class="flex items-center gap-2 border-t border-white/10 pt-3">
@@ -264,8 +214,8 @@
             </div>
         </section>
 
-        <!-- Projects Grid Section (4 Projects) -->
-        <section id="projects" class="space-y-6">
+        <!-- Projects Grid Section (4 Main + Archive Button Triggering Modal) -->
+        <section id="projects" class="space-y-6 scroll-mt-28">
             <div class="flex items-center justify-between">
                 <h2 class="text-2xl font-black tracking-tight flex items-center gap-3">
                     <span class="w-8 h-8 rounded-2xl bg-[var(--accent-container)] text-[var(--accent-primary)] flex items-center justify-center text-sm font-bold">01</span>
@@ -274,34 +224,35 @@
                 <span class="text-xs text-gray-400 font-semibold uppercase tracking-wider">Click cards for breakdown</span>
             </div>
 
+            <!-- Main 4 Projects Grid -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- Project 1 -->
-                <div onclick="openModal('Project Zero', 'A high-velocity web utility that turns annoying workflows into a 1-click smooth ride. Built with fluid transitions and zero-bloat state management.', ['React', 'Tailwind', '⚡', '2026'])" 
+                <!-- Project 1: Evostrike -->
+                <div onclick="openModal('Evostrike', 'High-intensity tactical shooter experience featuring fluid movement, responsive gunplay, and competitive combat mechanics.', ['Roblox', 'Tactical', 'Shooter', '2026'], 'https://www.roblox.com/games/101024480392696/Evostrike')" 
                      class="project-card m3-surface p-6 spring-hover cursor-pointer group">
                     <div class="flex justify-between items-start mb-4">
-                        <span class="text-3xl">🚀</span>
+                        <span class="text-3xl">⚔️</span>
                         <span class="text-xs font-mono px-3 py-1 m3-pill bg-white/5 group-hover:bg-[var(--accent-primary)] group-hover:text-black transition-colors">2026</span>
                     </div>
-                    <h3 class="text-xl font-bold mb-2 group-hover:text-[var(--accent-primary)] transition-colors">Project Zero</h3>
-                    <p class="text-gray-400 text-sm leading-relaxed mb-4">A high-velocity web utility that turns annoying workflows into a 1-click smooth ride.</p>
+                    <h3 class="text-xl font-bold mb-2 group-hover:text-[var(--accent-primary)] transition-colors">Evostrike</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed mb-4">High-intensity tactical shooter experience featuring fluid movement and competitive combat.</p>
                     <div class="flex flex-wrap gap-2">
-                        <span class="text-xs font-semibold px-3 py-1 rounded-full bg-white/5 text-gray-300">React</span>
-                        <span class="text-xs font-semibold px-3 py-1 rounded-full bg-white/5 text-gray-300">Tailwind</span>
+                        <span class="text-xs font-semibold px-3 py-1 rounded-full bg-white/5 text-gray-300">Roblox</span>
+                        <span class="text-xs font-semibold px-3 py-1 rounded-full bg-white/5 text-gray-300">Tactical</span>
                     </div>
                 </div>
 
-                <!-- Project 2 -->
-                <div onclick="openModal('Sauce Engine', 'Custom visual engine created to render expressive physics-based animations in the browser without dropping frames.', ['TypeScript', 'Three.js'])" 
+                <!-- Project 2: Enraged -->
+                <div onclick="openModal('Enraged', 'High-octane action and combat Roblox experience featuring intense gameplay mechanics.', ['Roblox', 'Action', 'Combat', '2026'], 'https://www.roblox.com/games/73933694395235/enraged')" 
                      class="project-card m3-surface p-6 spring-hover cursor-pointer group">
                     <div class="flex justify-between items-start mb-4">
-                        <span class="text-3xl">⚡</span>
+                        <span class="text-3xl">🔥</span>
                         <span class="text-xs font-mono px-3 py-1 m3-pill bg-white/5 group-hover:bg-[var(--accent-primary)] group-hover:text-black transition-colors">2026</span>
                     </div>
-                    <h3 class="text-xl font-bold mb-2 group-hover:text-[var(--accent-primary)] transition-colors">Sauce Engine</h3>
-                    <p class="text-gray-400 text-sm leading-relaxed mb-4">Physics-driven micro-interaction framework for modern web apps with zero drag.</p>
+                    <h3 class="text-xl font-bold mb-2 group-hover:text-[var(--accent-primary)] transition-colors">Enraged</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed mb-4">High-octane action and combat Roblox experience featuring intense gameplay mechanics.</p>
                     <div class="flex flex-wrap gap-2">
-                        <span class="text-xs font-semibold px-3 py-1 rounded-full bg-white/5 text-gray-300">TypeScript</span>
-                        <span class="text-xs font-semibold px-3 py-1 rounded-full bg-white/5 text-gray-300">Three.js</span>
+                        <span class="text-xs font-semibold px-3 py-1 rounded-full bg-white/5 text-gray-300">Roblox</span>
+                        <span class="text-xs font-semibold px-3 py-1 rounded-full bg-white/5 text-gray-300">Action</span>
                     </div>
                 </div>
 
@@ -335,40 +286,18 @@
                     </div>
                 </div>
             </div>
-        </section>
 
-        <!-- Skills Section -->
-        <section class="m3-surface p-8 space-y-6">
-            <h2 class="text-2xl font-black tracking-tight flex items-center gap-3">
-                <span class="w-8 h-8 rounded-2xl bg-[var(--accent-container)] text-[var(--accent-primary)] flex items-center justify-center text-sm font-bold">02</span>
-                Weapons of Choice
-            </h2>
-
-            <div class="flex flex-wrap gap-3">
-                <div class="m3-pill px-6 py-3 bg-[#22252e] hover:bg-[var(--accent-primary)] hover:text-black font-extrabold text-sm border border-white/5 cursor-default transition-all transform hover:scale-110 hover:-rotate-2">
-                    ⚡ JavaScript (ES6+)
-                </div>
-                <div class="m3-pill px-6 py-3 bg-[#22252e] hover:bg-[var(--accent-primary)] hover:text-black font-extrabold text-sm border border-white/5 cursor-default transition-all transform hover:scale-110 hover:rotate-2">
-                    🔷 TypeScript
-                </div>
-                <div class="m3-pill px-6 py-3 bg-[#22252e] hover:bg-[var(--accent-primary)] hover:text-black font-extrabold text-sm border border-white/5 cursor-default transition-all transform hover:scale-110 hover:-rotate-2">
-                    ⚛️ React / Next.js
-                </div>
-                <div class="m3-pill px-6 py-3 bg-[#22252e] hover:bg-[var(--accent-primary)] hover:text-black font-extrabold text-sm border border-white/5 cursor-default transition-all transform hover:scale-110 hover:rotate-2">
-                    🎨 Tailwind CSS
-                </div>
-                <div class="m3-pill px-6 py-3 bg-[#22252e] hover:bg-[var(--accent-primary)] hover:text-black font-extrabold text-sm border border-white/5 cursor-default transition-all transform hover:scale-110 hover:-rotate-2">
-                    🟢 Node.js / Express
-                </div>
-                <div class="m3-pill px-6 py-3 bg-[#22252e] hover:bg-[var(--accent-primary)] hover:text-black font-extrabold text-sm border border-white/5 cursor-default transition-all transform hover:scale-110 hover:rotate-2">
-                    🐙 Git & GitHub
-                </div>
+            <!-- View Archive Modal Trigger Button -->
+            <div class="flex justify-center pt-2">
+                <button onclick="openArchiveModal()" class="m3-pill px-8 py-4 m3-surface-tonal text-white font-extrabold hover:bg-[var(--accent-primary)] hover:text-black transition-all cursor-pointer shadow-lg">
+                    📂 View Project Archive (+8 More Builds)
+                </button>
             </div>
         </section>
 
     </main>
 
-    <!-- Project Modal Popup -->
+    <!-- Standard Project Modal Popup for Main Grid Cards -->
     <div id="projectModal" class="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300">
         <div class="m3-surface bg-[#1e2028] p-8 max-w-lg w-full transform scale-90 transition-transform duration-300 space-y-6 border-[var(--accent-primary)]/40 shadow-2xl" id="modalContainer">
             <div class="flex justify-between items-center">
@@ -377,7 +306,8 @@
             </div>
             <p id="modalDescription" class="text-gray-300 leading-relaxed font-semibold">Project description goes here.</p>
             <div id="modalTags" class="flex flex-wrap gap-2"></div>
-            <div class="pt-4 flex justify-end">
+            <div class="pt-4 flex items-center justify-between">
+                <div id="modalExtraAction"></div>
                 <button onclick="closeModal()" class="m3-pill px-6 py-3 bg-[var(--accent-primary)] text-black font-bold hover:scale-105 transition-transform cursor-pointer">
                     Got it 🤝
                 </button>
@@ -385,8 +315,163 @@
         </div>
     </div>
 
-    <!-- Three.js CDN for 3D DOOM Shooter -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- Archive Popup Modal with In-Tab View Switcher -->
+    <div id="archiveModal" class="fixed inset-0 z-50 bg-black/85 flex items-center justify-center p-4 md:p-8 opacity-0 pointer-events-none transition-opacity duration-300">
+        <div class="m3-surface bg-[#16181d] p-6 md:p-8 max-w-3xl w-full max-h-[85vh] flex flex-col transform scale-95 transition-transform duration-300 border-[var(--accent-primary)]/40 shadow-2xl" id="archiveContainer">
+            
+            <!-- Modal Header & Close -->
+            <div class="flex justify-between items-center pb-4 border-b border-white/10 mb-6">
+                <div>
+                    <h3 id="archiveHeaderTitle" class="text-2xl font-black text-[var(--accent-primary)]">Project Archive Vault</h3>
+                    <p id="archiveHeaderSub" class="text-xs text-gray-400 font-mono mt-1">Search through past builds, ROM compilers, and web experiments.</p>
+                </div>
+                <button onclick="closeArchiveModal()" class="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center font-bold cursor-pointer">✕</button>
+            </div>
+
+            <!-- VIEW 1: Search Bar & Archive List -->
+            <div id="archiveMainView" class="flex flex-col flex-1 overflow-hidden">
+                <div class="relative mb-4 flex-shrink-0">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-gray-400 font-mono">🔍</span>
+                    <input type="text" id="archiveSearch" onkeyup="filterArchive()" placeholder="Search archive builds (e.g., Android, Canvas, iOS)..." 
+                           class="w-full bg-[#0f1115] border border-white/10 rounded-2xl py-3.5 pl-12 pr-4 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-[var(--accent-primary)] font-mono transition-colors">
+                </div>
+
+                <div id="archiveList" class="overflow-y-auto space-y-4 pr-2 flex-1">
+                    
+                    <!-- Archive Item 1 -->
+                    <div onclick="openArchiveDetail('QUEUE-IFY Hair Studio', 'Humorous Qing Dynasty queue braid (辫子) hair transformation web studio built for a school project.', ['HTML5', 'Canvas', 'JS'])" 
+                         class="archive-item m3-surface-tonal p-5 hover:border-[var(--accent-primary)] cursor-pointer transition-all group">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="text-lg font-bold group-hover:text-[var(--accent-primary)] transition-colors">🐉 QUEUE-IFY Hair Studio</h4>
+                            <span class="text-xs font-mono px-2.5 py-1 m3-pill bg-white/5">2026</span>
+                        </div>
+                        <p class="text-gray-400 text-xs leading-relaxed mb-3">Hilarious browser filter applying historical Qing queue braids to portrait uploads for a school project.</p>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="text-[10px] font-semibold px-2.5 py-1 rounded-full bg-white/5 text-gray-300">Canvas API</span>
+                            <span class="text-[10px] font-semibold px-2.5 py-1 rounded-full bg-white/5 text-gray-300">School Project</span>
+                        </div>
+                    </div>
+
+                    <!-- Archive Item 2 -->
+                    <div onclick="openArchiveDetail('AOSP 16 ROM Builder', 'Custom Android 16 custom ROM compilation pipeline using Crave devspaces and manifest XML trees for astonc.', ['Android', 'Bash'])" 
+                         class="archive-item m3-surface-tonal p-5 hover:border-[var(--accent-primary)] cursor-pointer transition-all group">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="text-lg font-bold group-hover:text-[var(--accent-primary)] transition-colors">🤖 AOSP 16 ROM Builder</h4>
+                            <span class="text-xs font-mono px-2.5 py-1 m3-pill bg-white/5">2026</span>
+                        </div>
+                        <p class="text-gray-400 text-xs leading-relaxed mb-3">Automated manifest configurations and build scripts for compiling custom Android ROMs on Crave devspaces.</p>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="text-[10px] font-semibold px-2.5 py-1 rounded-full bg-white/5 text-gray-300">Android 16</span>
+                            <span class="text-[10px] font-semibold px-2.5 py-1 rounded-full bg-white/5 text-gray-300">Crave Cloud</span>
+                        </div>
+                    </div>
+
+                    <!-- Archive Item 3 -->
+                    <div onclick="openArchiveDetail('ColorOS Debloat Suite', 'Advanced package stripper leveraging Termux, Canta, and KernelSU Next for aggressive system optimization.', ['Root', 'Termux'])" 
+                         class="archive-item m3-surface-tonal p-5 hover:border-[var(--accent-primary)] cursor-pointer transition-all group">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="text-lg font-bold group-hover:text-[var(--accent-primary)] transition-colors">⚡ ColorOS Debloat Suite</h4>
+                            <span class="text-xs font-mono px-2.5 py-1 m3-pill bg-white/5">2026</span>
+                        </div>
+                        <p class="text-gray-400 text-xs leading-relaxed mb-3">Deep system package removal, debloating scripts, and LSPosed security bypass setup on OnePlus Ace 3.</p>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="text-[10px] font-semibold px-2.5 py-1 rounded-full bg-white/5 text-gray-300">KernelSU Next</span>
+                            <span class="text-[10px] font-semibold px-2.5 py-1 rounded-full bg-white/5 text-gray-300">Shell Script</span>
+                        </div>
+                    </div>
+
+                    <!-- Archive Item 4 -->
+                    <div onclick="openArchiveDetail('TrollStore IPA Vault', 'Customized jailbreak and TrollStore IPA management setup for iOS background daemon optimization.', ['iOS', 'Dopamine'])" 
+                         class="archive-item m3-surface-tonal p-5 hover:border-[var(--accent-primary)] cursor-pointer transition-all group">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="text-lg font-bold group-hover:text-[var(--accent-primary)] transition-colors">🍏 TrollStore IPA Vault</h4>
+                            <span class="text-xs font-mono px-2.5 py-1 m3-pill bg-white/5">2026</span>
+                        </div>
+                        <p class="text-gray-400 text-xs leading-relaxed mb-3">Persistent persistence helper configs and system daemon cleaner scripts on iPhone 6s running iOS 15.</p>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="text-[10px] font-semibold px-2.5 py-1 rounded-full bg-white/5 text-gray-300">iOS 15</span>
+                            <span class="text-[10px] font-semibold px-2.5 py-1 rounded-full bg-white/5 text-gray-300">TrollStore</span>
+                        </div>
+                    </div>
+
+                    <!-- Archive Item 5 -->
+                    <div onclick="openArchiveDetail('Redmi 6 Pro Kernel Optimizer', 'Custom zRAM tuning and Daikura LOS kernel tweaking for legacy Snapdragon performance.', ['Android', 'Kernel'])" 
+                         class="archive-item m3-surface-tonal p-5 hover:border-[var(--accent-primary)] cursor-pointer transition-all group">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="text-lg font-bold group-hover:text-[var(--accent-primary)] transition-colors">🔥 Redmi 6 Pro Kernel Tweaks</h4>
+                            <span class="text-xs font-mono px-2.5 py-1 m3-pill bg-white/5">2026</span>
+                        </div>
+                        <p class="text-gray-400 text-xs leading-relaxed mb-3">RAM management and custom kernel flashing scripts to maximize battery life and fluidity on Sakura.</p>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="text-[10px] font-semibold px-2.5 py-1 rounded-full bg-white/5 text-gray-300">Daikura LOS</span>
+                            <span class="text-[10px] font-semibold px-2.5 py-1 rounded-full bg-white/5 text-gray-300">zRAM</span>
+                        </div>
+                    </div>
+
+                    <!-- Archive Item 6 -->
+                    <div onclick="openArchiveDetail('Three.js Brutalist Terminal', 'Interactive web terminal and 3D mini-scene built with brutalist monochrome aesthetics.', ['Three.js', 'WebGL'])" 
+                         class="archive-item m3-surface-tonal p-5 hover:border-[var(--accent-primary)] cursor-pointer transition-all group">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="text-lg font-bold group-hover:text-[var(--accent-primary)] transition-colors">🕹️ Three.js Brutalist Terminal</h4>
+                            <span class="text-xs font-mono px-2.5 py-1 m3-pill bg-white/5">2026</span>
+                        </div>
+                        <p class="text-gray-400 text-xs leading-relaxed mb-4">Custom JavaScript terminal shell paired with real-time WebGL rendering environments.</p>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="text-[10px] font-semibold px-2.5 py-1 rounded-full bg-white/5 text-gray-300">Three.js</span>
+                            <span class="text-[10px] font-semibold px-2.5 py-1 rounded-full bg-white/5 text-gray-300">WebGL</span>
+                        </div>
+                    </div>
+
+                    <!-- Archive Item 7: Untitled Arsenal -->
+                    <div onclick="openArchiveDetail('Untitled Arsenal', 'Fast-paced weapon-rotation gun game Roblox experience featuring rapid combat and intense skirmishes.', ['Roblox', 'Shooter', 'Action', '2026'], 'https://www.roblox.com/games/133576815521410/Untitled-arsenal')" 
+                         class="archive-item m3-surface-tonal p-5 hover:border-[var(--accent-primary)] cursor-pointer transition-all group">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="text-lg font-bold group-hover:text-[var(--accent-primary)] transition-colors">🎯 Untitled Arsenal</h4>
+                            <span class="text-xs font-mono px-2.5 py-1 m3-pill bg-white/5">2026</span>
+                        </div>
+                        <p class="text-gray-400 text-xs leading-relaxed mb-4">Fast-paced weapon-rotation gun game Roblox experience featuring rapid combat and intense skirmishes.</p>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="text-[10px] font-semibold px-2.5 py-1 rounded-full bg-white/5 text-gray-300">Roblox</span>
+                            <span class="text-[10px] font-semibold px-2.5 py-1 rounded-full bg-white/5 text-gray-300">Shooter</span>
+                        </div>
+                    </div>
+
+                    <!-- Archive Item 8 -->
+                    <div onclick="openArchiveDetail('Windows 10 EXM Optimizer', 'Custom PowerShell optimization scripts for stripping telemetry and boosting gaming frame rates on legacy i7 rigs.', ['PowerShell', 'Windows'])" 
+                         class="archive-item m3-surface-tonal p-5 hover:border-[var(--accent-primary)] cursor-pointer transition-all group">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="text-lg font-bold group-hover:text-[var(--accent-primary)] transition-colors">💻 EXM Windows Tweaker</h4>
+                            <span class="text-xs font-mono px-2.5 py-1 m3-pill bg-white/5">2026</span>
+                        </div>
+                        <p class="text-gray-400 text-xs leading-relaxed mb-4">Aggressive system responsiveness tweaking and resource liberation scripts for Intel i7-6700 PCs.</p>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="text-[10px] font-semibold px-2.5 py-1 rounded-full bg-white/5 text-gray-300">PowerShell</span>
+                            <span class="text-[10px] font-semibold px-2.5 py-1 rounded-full bg-white/5 text-gray-300">System Optimization</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- VIEW 2: In-Tab Project Detail View (Hidden by default) -->
+            <div id="archiveDetailView" class="hidden flex-col space-y-6 overflow-y-auto pr-2 max-h-[60vh]">
+                <div>
+                    <button onclick="backToArchiveList()" class="m3-pill px-5 py-2.5 m3-surface-tonal text-white text-xs font-extrabold hover:bg-white/10 hover:scale-105 transition-all inline-flex items-center gap-2 cursor-pointer border border-white/10">
+                        ← Back to Archive
+                    </button>
+                </div>
+                <div class="space-y-4">
+                    <h4 id="archDetailTitle" class="text-2xl font-black text-[var(--accent-primary)]">Project Title</h4>
+                    <p id="archDetailDesc" class="text-gray-300 leading-relaxed font-semibold text-sm md:text-base">Description goes here.</p>
+                    <div id="archDetailTags" class="flex flex-wrap gap-2 pt-2"></div>
+                    <div id="archDetailExtraAction" class="pt-2"></div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Script Logic -->
     <script>
         // Accent Switcher Logic
         function setAccent(theme) {
@@ -399,15 +484,86 @@
             setAccent(savedAccent);
         }
 
-        // Terminal Command Logic
+        // Archive Modal Control Logic
+        function openArchiveModal() {
+            backToArchiveList(); // Reset to main list view on open
+            const modal = document.getElementById('archiveModal');
+            const container = document.getElementById('archiveContainer');
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+            container.classList.remove('scale-95');
+            container.classList.add('scale-100');
+            document.getElementById('archiveSearch').focus();
+        }
+
+        function closeArchiveModal() {
+            const modal = document.getElementById('archiveModal');
+            const container = document.getElementById('archiveContainer');
+            container.classList.remove('scale-100');
+            container.classList.add('scale-95');
+            modal.classList.add('opacity-0', 'pointer-events-none');
+        }
+
+        // In-Tab Archive Detail Navigation
+        function openArchiveDetail(title, desc, tags, link) {
+            document.getElementById('archDetailTitle').textContent = title;
+            document.getElementById('archDetailDesc').textContent = desc;
+
+            const tagsContainer = document.getElementById('archDetailTags');
+            tagsContainer.innerHTML = '';
+            tags.forEach(tag => {
+                const badge = document.createElement('span');
+                badge.className = 'text-xs font-bold px-3 py-1.5 m3-pill bg-white/10 text-white';
+                badge.textContent = tag;
+                tagsContainer.appendChild(badge);
+            });
+
+            const extraAction = document.getElementById('archDetailExtraAction');
+            extraAction.innerHTML = '';
+            if (link) {
+                const a = document.createElement('a');
+                a.href = link;
+                a.target = '_blank';
+                a.className = 'm3-pill px-6 py-3 m3-surface-tonal text-white font-bold hover:bg-white/10 hover:scale-105 transition-all inline-flex items-center gap-2 border border-white/10';
+                a.innerHTML = 'Play on Roblox ↗';
+                extraAction.appendChild(a);
+            }
+
+            // Switch Header & Views
+            document.getElementById('archiveHeaderTitle').textContent = 'Project Breakdown';
+            document.getElementById('archiveHeaderSub').textContent = 'Viewing details inside archive vault.';
+            document.getElementById('archiveMainView').classList.add('hidden');
+            document.getElementById('archiveDetailView').classList.remove('hidden');
+            document.getElementById('archiveDetailView').classList.add('flex');
+        }
+
+        function backToArchiveList() {
+            document.getElementById('archiveHeaderTitle').textContent = 'Project Archive Vault';
+            document.getElementById('archiveHeaderSub').textContent = 'Search through past builds, ROM compilers, and web experiments.';
+            document.getElementById('archiveDetailView').classList.remove('flex');
+            document.getElementById('archiveDetailView').classList.add('hidden');
+            document.getElementById('archiveMainView').classList.remove('hidden');
+            document.getElementById('archiveSearch').value = '';
+            filterArchive();
+        }
+
+        // Real-Time Search Filter Logic
+        function filterArchive() {
+            const query = document.getElementById('archiveSearch').value.toLowerCase();
+            const items = document.querySelectorAll('.archive-item');
+
+            items.forEach(item => {
+                const text = item.textContent.toLowerCase();
+                if (text.includes(query)) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+
+        // Terminal Command Logic (with ASCII fetch)
         const terminalOutput = document.getElementById('terminal-output');
         const terminalInput = document.getElementById('terminal-input');
-        const gameOverlay = document.getElementById('game-overlay');
-        const crosshair = document.getElementById('crosshair');
-        const gameHud = document.getElementById('game-hud');
-        const hudLevel = document.getElementById('hud-level');
-        const hudScore = document.getElementById('hud-score');
-        const hudTarget = document.getElementById('hud-target');
 
         terminalInput.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') {
@@ -420,186 +576,27 @@
                 if (cmd === 'clear') {
                     terminalOutput.innerHTML = `<p class="text-gray-400">&gt; Terminal cleared.</p>`;
                 } else if (cmd === 'help') {
-                    terminalOutput.innerHTML += `<p class="text-emerald-400">Valid commands: help, clear, fetch, doom</p>`;
+                    terminalOutput.innerHTML += `<p class="text-emerald-400">Valid commands: help, clear, fetch</p>`;
                 } else if (cmd === 'fetch') {
-                    terminalOutput.innerHTML += `<p class="text-emerald-400">dev // status: chill | caffeine: max | bugs in production: 0 (allegedly)</p>`;
-                } else if (cmd === 'doom') {
-                    terminalOutput.innerHTML += `<p class="text-red-400">🔥 Initializing DOOM Protocol across 3 Levels... Get ready.</p>`;
-                    startDoomGame();
+                    terminalOutput.innerHTML += `
+<pre class="text-[var(--accent-primary)] font-mono text-[10px] sm:text-xs leading-none py-2 overflow-x-auto">
+  ██████╗ ███╗   ██╗ ██████╗ 
+ ██╔════╝ ████╗  ██║██╔════╝ 
+ ██║  ███╗██╔██╗ ██║██║  ███╗
+ ██║   ██║██║╚██╗██║██║   ██║
+ ╚██████╔╝██║ ╚████║╚██████╔╝
+  ╚═════╝ ╚═╝  ╚═══╝ ╚═════╝ 
+</pre>
+<p class="text-emerald-400 font-bold">gng@doomcave // OS: Custom Web 16.2 | Uptime: 420 hrs | Shell: zsh | Status: compiling ROMs & writing code</p>`;
                 } else {
-                    terminalOutput.innerHTML += `<p class="text-red-400">zsh: command not found: ${cmd}. Type 'help' or 'doom'.</p>`;
+                    terminalOutput.innerHTML += `<p class="text-red-400">zsh: command not found: ${cmd}. Type 'help' or 'fetch'.</p>`;
                 }
                 terminalOutput.scrollTop = terminalOutput.scrollHeight;
             }
         });
 
-        // 3D 3-Level DOOM Shooter Game
-        function startDoomGame() {
-            gameOverlay.classList.add('active');
-            crosshair.style.display = 'block';
-            gameHud.style.display = 'block';
-            gameOverlay.innerHTML = '';
-
-            let currentLevel = 1;
-            let score = 0;
-            let targetKills = 5;
-
-            hudLevel.textContent = currentLevel;
-            hudScore.textContent = score;
-            hudTarget.textContent = targetKills;
-
-            const scene = new THREE.Scene();
-            scene.background = new THREE.Color(0x050508);
-            scene.fog = new THREE.FogExp2(0x050508, 0.05);
-
-            const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-            const renderer = new THREE.WebGLRenderer({ antialias: true });
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            gameOverlay.appendChild(renderer.domElement);
-
-            // Lighting
-            scene.add(new THREE.AmbientLight(0xffffff, 0.8));
-            const pointLight = new THREE.PointLight(0xd0bcff, 3, 50);
-            pointLight.position.set(0, 8, 0);
-            scene.add(pointLight);
-
-            // Grid Arena Floor
-            const gridHelper = new THREE.GridHelper(100, 50, 0xd0bcff, 0x1a1c22);
-            gridHelper.position.y = -3;
-            scene.add(gridHelper);
-
-            // Attach 3D Retro Gun Model
-            const gunGroup = new THREE.Group();
-            const gunGeo = new THREE.BoxGeometry(0.4, 0.3, 1.5);
-            const gunMat = new THREE.MeshStandardMaterial({ color: 0x333740, roughness: 0.2 });
-            const gunMesh = new THREE.Mesh(gunGeo, gunMat);
-            gunMesh.position.set(0.5, -0.5, -1.0);
-            gunGroup.add(gunMesh);
-            camera.add(gunGroup);
-            scene.add(camera);
-
-            // Spawn Enemies
-            let enemies = [];
-            function spawnEnemiesForLevel() {
-                enemies.forEach(e => scene.remove(e.mesh));
-                enemies = [];
-
-                for (let i = 0; i < targetKills + (currentLevel * 2); i++) {
-                    const enemyGroup = new THREE.Group();
-                    
-                    // Enemy Body (Doom-style demons/sprites)
-                    const bodyGeo = new THREE.BoxGeometry(1.2, 1.8, 1.2);
-                    const bodyMat = new THREE.MeshStandardMaterial({ 
-                        color: currentLevel === 1 ? 0xff5577 : currentLevel === 2 ? 0xffaa33 : 0xff2222,
-                        roughness: 0.3,
-                        emissive: 0x220000
-                    });
-                    const body = new THREE.Mesh(bodyGeo, bodyMat);
-                    enemyGroup.add(body);
-
-                    enemyGroup.position.x = (Math.random() - 0.5) * 30;
-                    enemyGroup.position.y = 0;
-                    enemyGroup.position.z = -20 - Math.random() * 35;
-
-                    scene.add(enemyGroup);
-                    enemies.push({
-                        mesh: enemyGroup,
-                        speed: 0.04 + (currentLevel * 0.03) + Math.random() * 0.04,
-                        dir: Math.random() > 0.5 ? 1 : -1
-                    });
-                }
-            }
-            spawnEnemiesForLevel();
-
-            // Mouse Look
-            let mouseX = 0, mouseY = 0;
-            function onMouseMove(e) {
-                mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
-                mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
-                camera.rotation.y = -mouseX * 1.2;
-                camera.rotation.x = -mouseY * 0.8;
-            }
-            window.addEventListener('mousemove', onMouseMove);
-
-            // Shooting
-            const raycaster = new THREE.Raycaster();
-            const mouse = new THREE.Vector2(0, 0);
-
-            function onShoot() {
-                // Recoil kick
-                gunGroup.position.z += 0.2;
-                setTimeout(() => { gunGroup.position.z -= 0.2; }, 60);
-
-                raycaster.setFromCamera(mouse, camera);
-                const targets = enemies.map(e => e.mesh);
-                const intersects = raycaster.intersectObjects(targets, true);
-
-                if (intersects.length > 0) {
-                    let hitRoot = intersects[0].object;
-                    while (hitRoot.parent && hitRoot.parent !== scene) {
-                        hitRoot = hitRoot.parent;
-                    }
-
-                    scene.remove(hitRoot);
-                    enemies = enemies.filter(e => e.mesh !== hitRoot);
-                    score++;
-                    hudScore.textContent = score;
-
-                    // Check Level Progression
-                    if (score >= targetKills) {
-                        if (currentLevel < 3) {
-                            currentLevel++;
-                            score = 0;
-                            targetKills += 3;
-                            hudLevel.textContent = currentLevel;
-                            hudScore.textContent = score;
-                            hudTarget.textContent = targetKills;
-                            spawnEnemiesForLevel();
-                        } else {
-                            endDoomGame(true);
-                        }
-                    }
-                }
-            }
-            window.addEventListener('click', onShoot);
-
-            // Animation Loop
-            let animId;
-            const animate = () => {
-                animId = requestAnimationFrame(animate);
-
-                enemies.forEach(en => {
-                    en.mesh.position.z += en.speed; // Move toward player
-                    en.mesh.position.x += Math.sin(Date.now() * 0.005) * 0.05;
-
-                    // Reset position if passed player
-                    if (en.mesh.position.z > 2) {
-                        en.mesh.position.z = -40;
-                    }
-                });
-
-                renderer.render(scene, camera);
-            };
-            animate();
-
-            function endDoomGame(won) {
-                cancelAnimationFrame(animId);
-                window.removeEventListener('mousemove', onMouseMove);
-                window.removeEventListener('click', onShoot);
-                gameOverlay.classList.remove('active');
-                crosshair.style.display = 'none';
-                gameHud.style.display = 'none';
-                renderer.dispose();
-
-                if (won) {
-                    terminalOutput.innerHTML += `<p class="text-emerald-400 font-bold">🏆 VICTORY! You conquered all 3 DOOM levels and purged the system!</p>`;
-                }
-                terminalOutput.scrollTop = terminalOutput.scrollHeight;
-            }
-        }
-
-        // Project Modal Logic[cite: 3]
-        function openModal(title, desc, tags) {
+        // Main Grid Project Modal Logic
+        function openModal(title, desc, tags, link) {
             document.getElementById('modalTitle').textContent = title;
             document.getElementById('modalDescription').textContent = desc;
             
@@ -611,6 +608,17 @@
                 badge.textContent = tag;
                 tagsContainer.appendChild(badge);
             });
+
+            const extraAction = document.getElementById('modalExtraAction');
+            extraAction.innerHTML = '';
+            if (link) {
+                const a = document.createElement('a');
+                a.href = link;
+                a.target = '_blank';
+                a.className = 'm3-pill px-6 py-3 m3-surface-tonal text-white font-bold hover:bg-white/10 hover:scale-105 transition-all inline-flex items-center gap-2';
+                a.innerHTML = 'Play on Roblox ↗';
+                extraAction.appendChild(a);
+            }
 
             const modal = document.getElementById('projectModal');
             const container = document.getElementById('modalContainer');
@@ -627,7 +635,7 @@
             modal.classList.add('opacity-0', 'pointer-events-none');
         }
 
-        // 3D Card Tilt Effect on Hover[cite: 3]
+        // 3D Card Tilt Effect on Hover
         document.querySelectorAll('.project-card').forEach(card => {
             card.addEventListener('mousemove', (e) => {
                 const rect = card.getBoundingClientRect();
